@@ -6,6 +6,7 @@ import { useTheme } from 'next-themes';
 import { themes } from '@/lib/utils';
 import { useState } from 'react';
 import { Sheet, SheetContent } from './ui/sheet';
+import CloudProviderSelector from './cloud-provider-selector';
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
@@ -81,7 +82,8 @@ export default function Header() {
         </Button>
       </div>
 
-      <div className="ml-auto hidden md:flex">
+      <div className="ml-auto hidden md:flex items-center gap-2">
+        <CloudProviderSelector />
         <a href={siteConfig.github} target="_blank">
           <Button className="" variant={'ghost'}>
             <Icons.GitHub className="h-5 w-5 fill-current" />

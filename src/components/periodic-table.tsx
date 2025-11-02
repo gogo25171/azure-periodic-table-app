@@ -1,7 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { Column } from './column';
 import { CategorySelector, type CategoryData } from './category-selector';
-import { Item, columns } from '@/app/data/azure';
+import { Item, ColumnType } from '@/app/data/azure';
 import { Categories } from '@/app/constants';
 import { colorConfig } from '@/config';
 
@@ -28,6 +28,7 @@ export default function PeriodicTable({
   setActiveCategory,
   textSearch,
   zoomLevel,
+  columns,
 }: {
   setOpen: Dispatch<SetStateAction<boolean>>;
   activeCategory: Categories | null;
@@ -35,6 +36,7 @@ export default function PeriodicTable({
   setActiveElement: Dispatch<SetStateAction<Item | null>>;
   textSearch: string;
   zoomLevel: 0 | 1 | 2;
+  columns: ColumnType[];
 }) {
   return (
     <div className="flex-col-reverse p-4 flex w-full xl:flex-row lg:flex text-white justify-center  items-start py-6 overflow-scroll xl:overflow-visible flex-nowrap">

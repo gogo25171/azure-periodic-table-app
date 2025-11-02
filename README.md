@@ -29,7 +29,7 @@ After installing the dependencies, you can start the development server:
 yarn dev
 ```
 
-Open http://localhost:3000 with your browser to see the result.
+Open <http://localhost:3000> with your browser to see the result.
 
 You can start editing the page by modifying app/page.tsx. The page auto-updates as you edit the file.
 
@@ -66,18 +66,157 @@ Before you start, ensure you have the following installed:
 ```bash
 docker pull onwardplatforms/azure-periodic-table-dockerversion
 ```
+
 2. Once you pulled the image, use the below command to check the docker images
 
 ```bash
 docker images
 ```
+
 3. Once the image shows up, it's time to run the image on your docker engine.
 
 ```bash
 docker run -d -p 3000:3000 <docker-imageid>
 ```
+
 4. Please use the below command to verify the DockerImage is running sucessfully.
 
 ```bash
 docker ps -a
 ```
+
+## How to contribute
+
+### Adding new providers
+
+Looking at providers like "Azure" as an example, you can add other cloud providers like AWS, Google Cloud, OVH, etc.
+
+To add a new cloud provider to the periodic table, follow these steps:
+
+#### 1. Create the data file
+
+Create a new TypeScript file in `src/app/data/` named after your provider (e.g., `your-provider.ts`). This file must export:
+
+- An `Item` type defining the structure of each resource
+- A `ColumnType` defining the structure of columns
+- A `columns` array containing all resources organized by columns
+
+Example structure:
+
+```typescript
+export type Item = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  length: string;
+  category: Categories;
+  learnUrl: string;
+  terraformUrl: string;
+  restrictions: string;
+  icon: string;
+  terraformCode: string;
+  // ... other optional properties
+};
+
+export type ColumnType = {
+  items: Item[];
+};
+
+export const columns: ColumnType[] = [
+  {
+    items: [
+      // Your resources here
+    ]
+  }
+];
+```
+
+#### 2. Add provider icons
+
+Add the provider's icon in the `Icons` object in `src/components/ui/icons.tsx`:
+
+```typescript
+export const Icons = {
+  // ... existing icons
+  YourProvider: (props: LucideProps) => (
+    <svg viewBox="..." {...props}>
+      {/* Your SVG content */}
+    </svg>
+  ),
+};
+```
+
+#### 3. Update the CloudProviderContext
+
+In `src/contexts/CloudProviderContext.tsx`, add your provider to the `CloudProvider` type:
+
+```typescript
+export type CloudProvider = 'azure' | 'aws' | 'google' | 'your-provider';
+```
+
+#### 4. Update the table wrapper
+
+In `src/components/table-wrapper.tsx`:
+
+- Import your data file:
+
+  ```typescript
+  import * as yourProviderData from '../app/data/your-provider';
+  ```
+
+- Add your provider to `providerData`:
+
+  ```typescript
+  const providerData = {
+    azure: azureData,
+    aws: awsData,
+    google: googleData,
+    'your-provider': yourProviderData,
+  };
+  ```
+
+- Add your provider configuration to `providerConfig`:
+
+  ```typescript
+  const providerConfig = {
+    // ... existing providers
+    'your-provider': {
+      title: 'The Your Provider Periodic Table',
+      subtitle: 'Bringing together core Your Provider content to supercharge your productivity.',
+      subtitleMobile: 'Supercharge your productivity in Your Provider.',
+      icon: Icons.YourProvider,
+    },
+  };
+  ```
+
+#### 5. Update the cloud provider selector
+
+In `src/components/cloud-provider-selector.tsx`, add your provider to `providerConfig`:
+
+```typescript
+const providerConfig = {
+  // ... existing providers
+  'your-provider': {
+    name: 'Your Provider',
+    icon: Icons.YourProvider,
+    color: 'text-your-color',
+  },
+};
+```
+
+#### 6. Add resource icons
+
+Place all your resource icons in the appropriate subfolder under `public/your-provider/icons/` organized by category (e.g., Compute, Networking, Storage, etc.).
+
+#### 7. Test your implementation
+
+1. Start the development server: `yarn dev`
+2. Navigate to <http://localhost:3000>
+3. Select your provider from the dropdown menu
+4. Verify that all resources display correctly with their icons and information
+
+## Credit
+
+SVG icon AWS : <https://github.com/weibeld/aws-icons-svg/blob/main/misc/aws/AWS_80.svg>
+SVG icon Google Cloud : Copilot / Claude Code 4.5

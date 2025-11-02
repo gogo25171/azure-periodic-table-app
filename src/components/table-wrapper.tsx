@@ -2,8 +2,11 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Item, columns } from '../app/data/azure';
+import { useState, useEffect, useMemo } from 'react';
+import { useCloudProvider } from '@/contexts/CloudProviderContext';
+import * as azureData from '../app/data/azure';
+import * as awsData from '../app/data/aws';
+import * as googleData from '../app/data/google';
 import PeriodicTable from '@/components/periodic-table';
 import Topbar from '@/components/topbar';
 import { Categories } from '../app/constants';
@@ -14,8 +17,40 @@ import { Label } from '@/components/ui/label';
 import useMobile from '@/custom-hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 
+const providerData = {
+  azure: azureData,
+  aws: awsData,
+  google: googleData,
+};
+
+const providerConfig = {
+  azure: {
+    title: 'The Azure Periodic Table',
+    subtitle: 'Bringing together core Azure content to supercharge your productivity.',
+    subtitleMobile: 'Supercharge your productivity in Azure.',
+    icon: Icons.Azure,
+  },
+  aws: {
+    title: 'The AWS Periodic Table',
+    subtitle: 'Bringing together core AWS content to supercharge your productivity.',
+    subtitleMobile: 'Supercharge your productivity in AWS.',
+    icon: Icons.AWS,
+  },
+  google: {
+    title: 'The Google Cloud Periodic Table',
+    subtitle: 'Bringing together core Google Cloud content to supercharge your productivity.',
+    subtitleMobile: 'Supercharge your productivity in Google Cloud.',
+    icon: Icons.Google,
+  },
+};
+
 export default function TableWrapper({ children }: { children: JSX.Element }) {
-  const [activeElement, setActiveElement] = useState<Item | null>(null);
+  const { provider } = useCloudProvider();
+  const data = useMemo(() => providerData[provider], [provider]);
+  const config = useMemo(() => providerConfig[provider], [provider]);
+  const ProviderIcon = config.icon;
+
+  const [activeElement, setActiveElement] = useState<azureData.Item | null>(null);
   const [open, setOpen] = useState(false);
   const [textSearch, setTextSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState<Categories | null>(null);
@@ -30,7 +65,7 @@ export default function TableWrapper({ children }: { children: JSX.Element }) {
     function handleSearchEnter(e: KeyboardEvent) {
       if (e.key === 'Enter') {
         // filter elements by text search
-        const filteredElements = columns
+        const filteredElements = data.columns
           .map((group) =>
             group.items.filter(
               (item) =>
@@ -50,7 +85,7 @@ export default function TableWrapper({ children }: { children: JSX.Element }) {
     return () => {
       window.removeEventListener('keydown', handleSearchEnter);
     };
-  }, [textSearch, navigate]);
+  }, [textSearch, navigate, data.columns]);
 
   return (
     <main
@@ -63,17 +98,15 @@ export default function TableWrapper({ children }: { children: JSX.Element }) {
           <>
             <Header />
             <div className="flex flex-col gap-2 justify-center w-full md:items-center items-center mt-2 mb-8">
-              {/* Wrapper div to house Azure icon, main title, and subtitle */}
+              {/* Wrapper div to house provider icon, main title, and subtitle */}
               <div className="flex items-center justify-center">
-                <Icons.Azure className="h-12 w-12 md:h-16 md:w-16 self-center mr-4" />
+                <ProviderIcon className="h-12 w-12 md:h-16 md:w-16 self-center mr-4" />
                 <div className="flex flex-col">
                   <h1 className="md:text-4xl font-bold leading-tight tracking-tighter lg:leading-[1.1] text-2xl">
-                    The Azure Periodic Table
+                    {config.title}
                   </h1>
                   <Label className="mt-2">
-                    {isMobile
-                      ? 'Supercharge your productivity in Azure.'
-                      : 'Bringing together core Azure content to supercharge your productivity.'}
+                    {isMobile ? config.subtitleMobile : config.subtitle}
                   </Label>
                 </div>
               </div>
@@ -107,6 +140,7 @@ export default function TableWrapper({ children }: { children: JSX.Element }) {
             setActiveElement={setActiveElement}
             setOpen={setOpen}
             zoomLevel={isFullScreen ? 2 : 0}
+            columns={data.columns}
           />
         </main>
       </div>

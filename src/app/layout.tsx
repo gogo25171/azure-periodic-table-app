@@ -1,6 +1,7 @@
 /* src/app/layout.tsx */
 
 import { ThemeProvider } from '@/components/theme-provider';
+import { CloudProviderProvider } from '@/contexts/CloudProviderContext';
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -60,9 +61,11 @@ export default function RootLayout({
       </Script>
       <body className={inter.className} style={{ width: '100%' }}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TableWrapper>
-            <>{children}</>
-          </TableWrapper>
+          <CloudProviderProvider>
+            <TableWrapper>
+              <>{children}</>
+            </TableWrapper>
+          </CloudProviderProvider>
         </ThemeProvider>
       </body>
     </html>
