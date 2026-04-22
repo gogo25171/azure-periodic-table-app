@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, ReactNode } from 'react';
 
-export type CloudProvider = 'azure' | 'aws' | 'google';
+export type CloudProvider = 'azure' | 'aws' | 'google' | 'ovh' | 'scaleway';
 
 interface CloudProviderContextType {
   provider: CloudProvider;

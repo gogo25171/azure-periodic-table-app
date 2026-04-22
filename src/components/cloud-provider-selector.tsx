@@ -26,6 +26,16 @@ const providerConfig = {
     icon: Icons.Google,
     color: 'text-red-500',
   },
+  ovh: {
+    name: 'OVHcloud',
+    icon: Icons.OVH,
+    color: 'text-blue-800',
+  },
+  scaleway: {
+    name: 'Scaleway',
+    icon: Icons.Scaleway,
+    color: 'text-purple-600',
+  },
 };
 
 export default function CloudProviderSelector() {

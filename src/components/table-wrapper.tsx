@@ -7,6 +7,8 @@ import { useCloudProvider } from '@/contexts/CloudProviderContext';
 import * as azureData from '../app/data/azure';
 import * as awsData from '../app/data/aws';
 import * as googleData from '../app/data/google';
+import * as ovhData from '../app/data/ovh';
+import * as scalewayData from '../app/data/scaleway';
 import PeriodicTable from '@/components/periodic-table';
 import Topbar from '@/components/topbar';
 import { Categories } from '../app/constants';
@@ -21,6 +23,8 @@ const providerData = {
   azure: azureData,
   aws: awsData,
   google: googleData,
+  ovh: ovhData,
+  scaleway: scalewayData,
 };
 
 const providerConfig = {
@@ -41,6 +45,18 @@ const providerConfig = {
     subtitle: 'Bringing together core Google Cloud content to supercharge your productivity.',
     subtitleMobile: 'Supercharge your productivity in Google Cloud.',
     icon: Icons.Google,
+  },
+  ovh: {
+    title: 'The OVHcloud Periodic Table',
+    subtitle: 'Bringing together core OVHcloud content to supercharge your productivity.',
+    subtitleMobile: 'Supercharge your productivity in OVHcloud.',
+    icon: Icons.OVH,
+  },
+  scaleway: {
+    title: 'The Scaleway Periodic Table',
+    subtitle: 'Bringing together core Scaleway content to supercharge your productivity.',
+    subtitleMobile: 'Supercharge your productivity in Scaleway.',
+    icon: Icons.Scaleway,
   },
 };
 

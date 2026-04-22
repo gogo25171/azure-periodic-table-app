@@ -27,7 +27,13 @@ export type Item = {
   restrictions: string;
   icon: string;
   terraformCode: string;
-  // ... other optional properties
+  resource?: string;
+  entity?: string;
+  scope?: string;
+  bicepCode?: string;
+  armCode?: string;
+  pricingReferenceUrl?: string;
+  portalUrl?: string;
 };
 
 export type ColumnType = {
@@ -42,6 +48,8 @@ export const columns: ColumnType[] = [
   }
 ];
 ```
+
+For a detailed breakdown of the `Item` properties and how to define individual resources, please refer to the [Adding New Resources](adding-resources.md) guide.
 
 #### 2. Add provider icons
 
@@ -132,11 +140,24 @@ In `src/components/sidebar.tsx`, add your provider to the conditional logic insi
   }
 ```
 
-#### 7. Add resource icons
+#### 7. Update the dynamic resource route
+
+In `src/app/resource/[id]/page.tsx`, import your data file and add it to the `providers` array so that clicking on a resource works properly:
+
+```typescript
+import * as yourProviderData from '@/app/data/your-provider';
+
+const providers = [
+  // ... existing providers
+  { id: 'your-provider', data: yourProviderData },
+];
+```
+
+#### 8. Add resource icons
 
 Place all your resource icons in the appropriate subfolder under `public/your-provider/icons/` organized by category (e.g., Compute, Networking, Storage, etc.).
 
-#### 8. Test your implementation
+#### 9. Test your implementation
 
 1. Start the development server: `yarn dev`
 2. Navigate to <http://localhost:3000>

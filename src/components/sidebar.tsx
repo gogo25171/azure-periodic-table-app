@@ -82,6 +82,28 @@ export default function Sidebar({
     shellHref = 'https://shell.cloud.google.com/';
     pricingHref = 'https://cloud.google.com/products/calculator';
     pricingText = isMobile ? 'Pricing' : 'Google Cloud Pricing Calculator';
+  } else if (provider === 'ovh') {
+    docText = isMobile ? 'Docs' : 'OVHcloud Docs';
+    costText = isMobile ? 'Cost' : 'OVHcloud Pricing';
+    ProviderIcon = Icons.OVH;
+    ProviderCloudIcon = Icons.OVH;
+    portalText = isMobile ? 'Manager' : 'OVHcloud Manager';
+    shellText = isMobile ? 'Shell' : 'OVHcloud Shell';
+    providerName = 'OVHcloud';
+    shellHref = 'https://www.ovh.com/manager/';
+    pricingHref = 'https://www.ovhcloud.com/en/public-cloud/prices/';
+    pricingText = isMobile ? 'Pricing' : 'OVHcloud Pricing';
+  } else if (provider === 'scaleway') {
+    docText = isMobile ? 'Docs' : 'Scaleway Docs';
+    costText = isMobile ? 'Cost' : 'Scaleway Pricing';
+    ProviderIcon = Icons.Scaleway;
+    ProviderCloudIcon = Icons.Scaleway;
+    portalText = isMobile ? 'Console' : 'Scaleway Console';
+    shellText = isMobile ? 'Shell' : 'Scaleway Shell';
+    providerName = 'Scaleway';
+    shellHref = 'https://console.scaleway.com/';
+    pricingHref = 'https://www.scaleway.com/en/pricing/';
+    pricingText = isMobile ? 'Pricing' : 'Scaleway Pricing';
   }
 
   const prompt = `

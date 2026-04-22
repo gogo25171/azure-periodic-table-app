@@ -19,5 +19,6 @@ nav:
   - Contributing:
     - Overview: contributing/index.md
     - Adding New Providers: contributing/adding-providers.md
+    - Adding New Resources: contributing/adding-resources.md
   - About:
     - Credits: about/credits.md

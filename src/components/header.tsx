@@ -4,13 +4,19 @@ import { Icons } from './ui/icons';
 import { siteConfig } from '@/config';
 import { useTheme } from 'next-themes';
 import { themes } from '@/lib/utils';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sheet, SheetContent } from './ui/sheet';
 import CloudProviderSelector from './cloud-provider-selector';
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <nav className="flex w-full">
       <Sheet open={open} onOpenChange={() => setOpen((prev) => !prev)}>
@@ -56,12 +62,12 @@ export default function Header() {
             >
               {theme === themes.DARK ? (
                 <div className="flex my-2 justify-start items-center">
-                  <Icons.Moon className="h-6 w-6 fill-current" />
+                  {!mounted ? <div className="h-6 w-6" /> : <Icons.Moon className="h-6 w-6 fill-current" />}
                   <span className="px-4 font-bold text-lg">Dark Mode</span>
                 </div>
               ) : (
                 <div className="flex my-2 justify-start items-center">
-                  <Icons.Sun className="h-6 w-6 fill-current" />
+                  {!mounted ? <div className="h-6 w-6" /> : <Icons.Sun className="h-6 w-6 fill-current" />}
                   <span className="px-4 font-bold text-lg">Light Mode</span>
                 </div>
               )}
@@ -115,7 +121,9 @@ export default function Header() {
           }
           variant={'ghost'}
         >
-          {theme === themes.DARK ? (
+          {!mounted ? (
+            <div className="h-5 w-5" />
+          ) : theme === themes.DARK ? (
             <Icons.Moon className="h-5 w-5 fill-current" />
           ) : (
             <Icons.Sun className="h-5 w-5 fill-current" />

@@ -1,6 +1,8 @@
 import * as azureData from '@/app/data/azure';
 import * as awsData from '@/app/data/aws';
 import * as googleData from '@/app/data/google';
+import * as ovhData from '@/app/data/ovh';
+import * as scalewayData from '@/app/data/scaleway';
 import Sidebar from '@/components/sidebar';
 import fs from 'fs';
 import path from 'path';
@@ -9,6 +11,8 @@ const providers = [
   { id: 'azure', data: azureData },
   { id: 'aws', data: awsData },
   { id: 'google', data: googleData },
+  { id: 'ovh', data: ovhData },
+  { id: 'scaleway', data: scalewayData },
 ];
 
 export default function Page({ params }: { params: { id: string } }) {
