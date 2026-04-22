@@ -1,0 +1,23 @@
+site_name: Azure Periodic Table
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Pre-requisites: getting-started/prerequisites.md
+    - Installation: getting-started/installation.md
+    - Configuration: getting-started/configuration.md
+    - Running Locally: getting-started/running-locally.md
+  - Deployment:
+    - Docker: deployment/docker.md
+    - Vercel: deployment/vercel.md
+  - Contributing:
+    - Overview: contributing/index.md
+    - Adding New Providers: contributing/adding-providers.md
+  - About:
+    - Credits: about/credits.md
