@@ -15,10 +15,21 @@ npm install -g yarn
 
 ## Installation
 
-Before starting the server, install the necessary dependencies. Navigate to the project directory and run:
+Before starting the server, you must install the necessary dependencies. Navigate to the project directory and run:
 
 ```bash
-yarn
+yarn install
+```
+
+> **Note**: Skipping this step will result in errors like `next: not found` when trying to start the development server.
+
+## Configuration
+
+### Disabling the AI Chat Feature
+To disable the AI Chat feature in the application, you can set the `ENABLE_CHAT` variable to `false` in `src/app/constants.ts`:
+
+```typescript
+export const ENABLE_CHAT = false;
 ```
 
 ## Getting Started
@@ -205,11 +216,27 @@ const providerConfig = {
 };
 ```
 
-#### 6. Add resource icons
+#### 6. Update the sidebar dynamic texts
+
+In `src/components/sidebar.tsx`, add your provider to the conditional logic inside the `Sidebar` component to dynamically adjust the UI text, icons, and AI prompt for your cloud provider:
+
+```typescript
+  } else if (provider === 'your-provider') {
+    docText = isMobile ? 'Docs' : 'Your Provider Docs';
+    costText = isMobile ? 'Cost' : 'Your Provider Pricing';
+    ProviderIcon = Icons.YourProvider;
+    ProviderCloudIcon = Icons.YourProvider;
+    portalText = isMobile ? 'Console' : 'Your Provider Console';
+    shellText = isMobile ? 'Shell' : 'Your Provider Shell';
+    providerName = 'Your Provider';
+  }
+```
+
+#### 7. Add resource icons
 
 Place all your resource icons in the appropriate subfolder under `public/your-provider/icons/` organized by category (e.g., Compute, Networking, Storage, etc.).
 
-#### 7. Test your implementation
+#### 8. Test your implementation
 
 1. Start the development server: `yarn dev`
 2. Navigate to <http://localhost:3000>
@@ -218,5 +245,8 @@ Place all your resource icons in the appropriate subfolder under `public/your-pr
 
 ## Credit
 
-SVG icon AWS : <https://github.com/weibeld/aws-icons-svg/blob/main/misc/aws/AWS_80.svg>
-SVG icon Google Cloud : Copilot / Claude Code 4.5
+AWS svg icon: https://github.com/weibeld/aws-icons-svg/blob/main/misc/aws/AWS_80.svg
+
+Google Cloud svg icon: Copilot / Claude Code 4.5
+
+Azure svg icon: Base in the project 

@@ -148,6 +148,10 @@ const Cell: React.FC<CellProps> = ({
                   height={10}
                   className=""
                   src={`${prefix}${item.icon}`}
+                  onError={(e) => {
+                    e.currentTarget.src = `${prefix}/default-icon.svg`;
+                    e.currentTarget.srcset = '';
+                  }}
                 />
                 <figcaption className="hidden">{`Icon for ${item.name}`}</figcaption>
               </figure>

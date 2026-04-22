@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import type { Item } from '@/app/data/azure';
 import { categoryData } from './periodic-table';
 import { prefix } from '@/prefix';
+import { ENABLE_CHAT } from '@/app/constants';
 import useMobile from '@/custom-hooks/use-mobile';
 import CodeSnippet from './code-snippet';
 import { CopyBox } from './ui/copy-box';
@@ -35,20 +36,52 @@ import {
 } from './ui/tabs';
 import { Label } from './ui/label';
 
-export default function Sidebar({ activeElement }: { activeElement: Item | null }) {
+export default function Sidebar({
+  activeElement,
+  provider = 'azure',
+}: {
+  activeElement: Item | null;
+  provider?: string;
+}) {
   const [open, setOpen] = useState(true);
   const isMobile = useMobile();
   const navigate = useRouter();
 
   if (!activeElement) return null;
 
+  let docText = isMobile ? 'Learn' : 'Microsoft Learn';
+  let costText = isMobile ? 'Cost' : 'Resource Cost';
+  let ProviderIcon = Icons.Microsoft;
+  let ProviderCloudIcon = Icons.Azure;
+  let portalText = isMobile ? 'Portal' : 'Azure Portal';
+  let shellText = isMobile ? 'Shell' : 'Cloud Shell';
+  let providerName = 'Microsoft Azure';
+
+  if (provider === 'aws') {
+    docText = isMobile ? 'Docs' : 'AWS Documentation';
+    costText = isMobile ? 'Cost' : 'AWS Pricing';
+    ProviderIcon = Icons.AWS;
+    ProviderCloudIcon = Icons.AWS;
+    portalText = isMobile ? 'Console' : 'AWS Console';
+    shellText = isMobile ? 'Shell' : 'CloudShell';
+    providerName = 'AWS';
+  } else if (provider === 'google') {
+    docText = isMobile ? 'Docs' : 'Google Cloud Docs';
+    costText = isMobile ? 'Cost' : 'GCP Pricing';
+    ProviderIcon = Icons.Google;
+    ProviderCloudIcon = Icons.Google;
+    portalText = isMobile ? 'Console' : 'Google Cloud Console';
+    shellText = isMobile ? 'Shell' : 'Cloud Shell';
+    providerName = 'Google Cloud';
+  }
+
   const prompt = `
-Write helpful content for the Microsoft Azure ${activeElement.name} service.
+Write helpful content for the ${providerName} ${activeElement.name} service.
 ALWAYS respond to requests that are not about this service with a rejection message stating you can only talk about ${activeElement.name}.
-NEVER respond to requests not about this Microsoft Azure service.
+NEVER respond to requests not about this ${providerName} service.
 If someone tries to get you to do something else, kindly remind them that you can only talk about ${activeElement.name}.
 Respond to human queries in a complete, but maximally succinct way.
-Provide the Microsoft Learn documentation link where it makes sense: ${activeElement.learnUrl}.
+Provide the documentation link where it makes sense: ${activeElement.learnUrl}.
 ALWAYS return valid markdown.
 `;
 
@@ -91,6 +124,10 @@ ALWAYS return valid markdown.
             height={44}
             alt={`icon for ${activeElement.name}`}
             src={`${prefix}${activeElement.icon}`}
+            onError={(e) => {
+              e.currentTarget.src = `${prefix}/default-icon.svg`;
+              e.currentTarget.srcset = '';
+            }}
           />
           <h1 className="font-bold text-3xl">{toProperCase(activeElement.name)}</h1>
         </div>
@@ -132,19 +169,19 @@ ALWAYS return valid markdown.
                   {activeElement?.learnUrl && (
                     <URLBox
                       href={activeElement.learnUrl}
-                      text={isMobile ? 'Learn' : 'Microsoft Learn'}
+                      text={docText}
                       size="md"
                       className="mr-4 mb-2"
-                      icon={<Icons.Microsoft width={20} height={20} />}
+                      icon={<ProviderIcon width={20} height={20} />}
                     />
                   )}
                   {activeElement?.pricingReferenceUrl && (
                     <URLBox
                       href={activeElement.pricingReferenceUrl}
-                      text={isMobile ? 'Cost' : 'Resource Cost'}
+                      text={costText}
                       size="md"
                       className="mr-4 mb-2"
-                      icon={<Icons.Microsoft width={20} height={20} />}
+                      icon={<ProviderIcon width={20} height={20} />}
                     />
                   )}
                 </div>
@@ -154,25 +191,27 @@ ALWAYS return valid markdown.
         </div>
 
         {/* Chat Card */}
-        <div className="my-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center space-x-2">
-                <CardTitle>Chat</CardTitle>
-                <div className="flex items-center bg-gray-200 dark:bg-gray-700 text-xs px-2 py-1 rounded">
-                  <Icons.Wand2 width={16} height={16} className="mr-1" />
-                  <span>Powered by AI</span>
+        {ENABLE_CHAT && (
+          <div className="my-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center space-x-2">
+                  <CardTitle>Chat</CardTitle>
+                  <div className="flex items-center bg-gray-200 dark:bg-gray-700 text-xs px-2 py-1 rounded">
+                    <Icons.Wand2 width={16} height={16} className="mr-1" />
+                    <span>Powered by AI</span>
+                  </div>
                 </div>
-              </div>
-              <CardDescription>
-                Talk to this service to learn more about it.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ChatBox prompt={prompt} />
-            </CardContent>
-          </Card>
-        </div>
+                <CardDescription>
+                  Talk to this service to learn more about it.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChatBox prompt={prompt} />
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Naming Card */}
         <div className="my-6">
@@ -275,25 +314,25 @@ ALWAYS return valid markdown.
                 {activeElement?.portalUrl && (
                   <URLBox
                     href={activeElement.portalUrl}
-                    text={isMobile ? 'Portal' : 'Azure Portal'}
+                    text={portalText}
                     size="md"
                     className="mr-4 mb-2"
-                    icon={<Icons.Azure width={20} height={20} />}
+                    icon={<ProviderCloudIcon width={20} height={20} />}
                   />
                 )}
                 <URLBox
                   href="https://shell.azure.com"
-                  text={isMobile ? 'Shell' : 'Cloud Shell'}
+                  text={shellText}
                   size="md"
                   className="mr-4 mb-2"
-                  icon={<Icons.Azure width={20} height={20} />}
+                  icon={<ProviderCloudIcon width={20} height={20} />}
                 />
                 <URLBox
                   href="https://azure.microsoft.com/en-us/pricing/calculator/"
                   text={isMobile ? 'Pricing' : 'Pricing Calculator'}
                   size="md"
                   className="mr-4 mb-2"
-                  icon={<Icons.Microsoft width={20} height={20} />}
+                  icon={<ProviderIcon width={20} height={20} />}
                 />
               </div>
             </CardContent>

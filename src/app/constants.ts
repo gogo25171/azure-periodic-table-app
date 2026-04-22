@@ -15,3 +15,6 @@ export enum Categories {
   MIGRATION = 'Migration',
   MANAGEMENT = 'Management',
 }
+
+// Toggle this variable to `false` to disable the AI Chat feature in the application
+export const ENABLE_CHAT = false;

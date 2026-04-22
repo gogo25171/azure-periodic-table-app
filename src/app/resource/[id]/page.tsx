@@ -1,56 +1,80 @@
-import { Item, columns } from '@/app/data/azure';
+import * as azureData from '@/app/data/azure';
+import * as awsData from '@/app/data/aws';
+import * as googleData from '@/app/data/google';
 import Sidebar from '@/components/sidebar';
 import fs from 'fs';
 import path from 'path';
 
-// get url param
+const providers = [
+  { id: 'azure', data: azureData },
+  { id: 'aws', data: awsData },
+  { id: 'google', data: googleData },
+];
+
 export default function Page({ params }: { params: { id: string } }) {
-  const cloud = 'azure'
-  const terraformFilePath = path.join(process.cwd(), 'public', cloud, 'code', 'terraform', `${params.id}.tf`);
-  const bicepFilePath = path.join(process.cwd(), 'public', cloud, 'code', 'bicep', `${params.id}.bicep`);
-  const armFilePath = path.join(process.cwd(), 'public', cloud, 'code', 'arm', `${params.id}.json`);
-
-  let terraformCodeSnippet = '';
-  let bicepCodeSnippet = '';
-  let armCodeSnippet = '';
-
-  // Read Terraform file
-  try {
-    terraformCodeSnippet = fs.readFileSync(terraformFilePath, 'utf8');
-  } catch (err) {
-    console.log(err);
-  }
-
-  // Read Bicep file
-  try {
-    bicepCodeSnippet = fs.readFileSync(bicepFilePath, 'utf8');
-  } catch (err) {
-    console.log(err);
-  }
-
-  // Read ARM file
-  try {
-    armCodeSnippet = fs.readFileSync(armFilePath, 'utf8');
-  } catch (err) {
-    console.log(err);
-  }
-
   const paramsId = params.id;
 
-  const activeElement = columns
-    .flatMap((column) => column.items)
-    .find((item) => item.id === paramsId);
+  // Find which cloud provider this resource belongs to
+  let cloud = '';
+  let activeElement: any = null;
+
+  for (const provider of providers) {
+    const found = provider.data.columns
+      .flatMap((column) => column.items)
+      .find((item) => item.id === paramsId);
+    
+    if (found) {
+      cloud = provider.id;
+      activeElement = found;
+      break;
+    }
+  }
 
   if (!activeElement) {
     return null;
   }
 
-  const elementWithCodeSnippet: Item = {
+  const terraformFilePath = path.join(process.cwd(), 'public', cloud, 'code', 'terraform', `${paramsId}.tf`);
+  const bicepFilePath = path.join(process.cwd(), 'public', cloud, 'code', 'bicep', `${paramsId}.bicep`);
+  const armFilePath = path.join(process.cwd(), 'public', cloud, 'code', 'arm', `${paramsId}.json`);
+
+  let terraformCodeSnippet = activeElement.terraformCode || '';
+  let bicepCodeSnippet = activeElement.bicepCode || '';
+  let armCodeSnippet = activeElement.armCode || '';
+
+  // Read Terraform file
+  try {
+    if (fs.existsSync(terraformFilePath)) {
+      terraformCodeSnippet = fs.readFileSync(terraformFilePath, 'utf8');
+    }
+  } catch (err) {
+    console.error(`Failed to read Terraform file for ${paramsId}`);
+  }
+
+  // Read Bicep file
+  try {
+    if (fs.existsSync(bicepFilePath)) {
+      bicepCodeSnippet = fs.readFileSync(bicepFilePath, 'utf8');
+    }
+  } catch (err) {
+    console.error(`Failed to read Bicep file for ${paramsId}`);
+  }
+
+  // Read ARM file
+  try {
+    if (fs.existsSync(armFilePath)) {
+      armCodeSnippet = fs.readFileSync(armFilePath, 'utf8');
+    }
+  } catch (err) {
+    console.error(`Failed to read ARM file for ${paramsId}`);
+  }
+
+  const elementWithCodeSnippet = {
     ...activeElement,
     terraformCode: terraformCodeSnippet,
     bicepCode: bicepCodeSnippet,
     armCode: armCodeSnippet,
   };
 
-  return <Sidebar activeElement={elementWithCodeSnippet} />;
+  return <Sidebar activeElement={elementWithCodeSnippet} provider={cloud} />;
 }
