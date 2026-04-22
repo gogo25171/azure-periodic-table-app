@@ -39,7 +39,7 @@ export default function PeriodicTable({
   columns: ColumnType[];
 }) {
   return (
-    <div className="flex-col-reverse p-4 flex w-full xl:flex-row lg:flex text-white justify-center  items-start py-6 overflow-scroll xl:overflow-visible flex-nowrap">
+    <div id="exportable-table-container" className="flex-col-reverse p-4 flex w-full xl:flex-row lg:flex text-white justify-center  items-start py-6 overflow-scroll xl:overflow-visible flex-nowrap">
       <div className="flex justify-start md:justify-center items-start ml-0 xl:ml-auto">
         {columns.map((group, i) => (
           <Column

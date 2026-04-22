@@ -1,31 +1,50 @@
 import { Download as DownloadIcon } from 'lucide-react';
 import { Button } from './ui/button';
-import { prefix } from '@/prefix';
+import { useState } from 'react';
+import html2canvas from 'html2canvas';
+import { useCloudProvider } from '@/contexts/CloudProviderContext';
 
 export function Download() {
-  const downloadFile = () => {
-    // Provide the path to your local file here.
-    // This could be a URL pointing to a file stored locally in your public directory.
-    const url = `${prefix}/periodic-table.png`;
+  const [isDownloading, setIsDownloading] = useState(false);
+  const { provider } = useCloudProvider();
 
-    // Create new 'a' element
-    const a = document.createElement('a');
-    a.href = url;
+  const downloadFile = async () => {
+    const element = document.getElementById('exportable-table-container');
+    if (!element) return;
 
-    // This part will prompt the user to save the image as a download
-    a.download = 'azure-periodic-table.png'; // or you could give it a custom name here
-    a.click();
+    setIsDownloading(true);
+    try {
+      const canvas = await html2canvas(element, {
+        backgroundColor: '#000000', // Matches the dark theme background
+        scale: 2, // Higher resolution
+        useCORS: true,
+        allowTaint: true,
+      });
+      const url = canvas.toDataURL('image/png');
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${provider}-periodic-table.png`;
+      a.click();
+    } catch (error) {
+      console.error('Failed to generate image', error);
+    } finally {
+      setIsDownloading(false);
+    }
   };
+
   return (
     <Button
       variant={'secondary'}
       onClick={() => {
         downloadFile();
       }}
+      disabled={isDownloading}
       className="mx-2 flex"
     >
       <DownloadIcon className="w-4 h-4" />
-      <span className="ml-2">Download</span>
+      <span className="ml-2">{isDownloading ? 'Exporting...' : 'Download'}</span>
     </Button>
   );
 }
+

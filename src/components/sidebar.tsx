@@ -56,6 +56,9 @@ export default function Sidebar({
   let portalText = isMobile ? 'Portal' : 'Azure Portal';
   let shellText = isMobile ? 'Shell' : 'Cloud Shell';
   let providerName = 'Microsoft Azure';
+  let shellHref = 'https://shell.azure.com';
+  let pricingHref = 'https://azure.microsoft.com/en-us/pricing/calculator/';
+  let pricingText = isMobile ? 'Pricing' : 'Pricing Calculator';
 
   if (provider === 'aws') {
     docText = isMobile ? 'Docs' : 'AWS Documentation';
@@ -65,6 +68,9 @@ export default function Sidebar({
     portalText = isMobile ? 'Console' : 'AWS Console';
     shellText = isMobile ? 'Shell' : 'CloudShell';
     providerName = 'AWS';
+    shellHref = 'https://console.aws.amazon.com/cloudshell/home';
+    pricingHref = 'https://calculator.aws/#/';
+    pricingText = isMobile ? 'Pricing' : 'AWS Pricing Calculator';
   } else if (provider === 'google') {
     docText = isMobile ? 'Docs' : 'Google Cloud Docs';
     costText = isMobile ? 'Cost' : 'GCP Pricing';
@@ -73,6 +79,9 @@ export default function Sidebar({
     portalText = isMobile ? 'Console' : 'Google Cloud Console';
     shellText = isMobile ? 'Shell' : 'Cloud Shell';
     providerName = 'Google Cloud';
+    shellHref = 'https://shell.cloud.google.com/';
+    pricingHref = 'https://cloud.google.com/products/calculator';
+    pricingText = isMobile ? 'Pricing' : 'Google Cloud Pricing Calculator';
   }
 
   const prompt = `
@@ -229,15 +238,15 @@ ALWAYS return valid markdown.
               </div>
               <div className="mb-4">
                 <Label>Length</Label>
-                <p>{activeElement?.length}</p>
+                <p>{activeElement?.length || 'N/A'}</p>
               </div>
               <div className="mb-4">
                 <Label>Valid Characters</Label>
-                <p>{activeElement?.restrictions}</p>
+                <p>{activeElement?.restrictions || 'N/A'}</p>
               </div>
               <div className="mb-4">
                 <Label>Scope</Label>
-                <p>{activeElement?.scope}</p>
+                <p>{activeElement?.scope || 'N/A'}</p>
               </div>
             </CardContent>
           </Card>
@@ -256,8 +265,12 @@ ALWAYS return valid markdown.
               <Tabs defaultValue="terraform">
                 <TabsList>
                   <TabsTrigger value="terraform">Terraform</TabsTrigger>
-                  <TabsTrigger value="bicep">Bicep</TabsTrigger>
-                  <TabsTrigger value="arm">ARM Template</TabsTrigger>
+                  {provider === 'azure' && (
+                    <>
+                      <TabsTrigger value="bicep">Bicep</TabsTrigger>
+                      <TabsTrigger value="arm">ARM Template</TabsTrigger>
+                    </>
+                  )}
                 </TabsList>
                 <TabsContent value="terraform">
                   {activeElement?.terraformUrl && (
@@ -271,30 +284,34 @@ ALWAYS return valid markdown.
                   )}
                   <CodeSnippet codeString={activeElement.terraformCode} language="hcl" />
                 </TabsContent>
-                <TabsContent value="bicep">
-                  {activeElement?.resource && activeElement?.entity && (
-                    <URLBox
-                      href={`https://learn.microsoft.com/en-us/azure/templates/${activeElement?.resource}/${activeElement?.entity}?pivots=deployment-language-bicep`}
-                      text="Official Documentation"
-                      className="mr-6 my-4"
-                      icon={<Icons.Microsoft width={20} height={20} />}
-                      size="md"
-                    />
-                  )}
-                  <CodeSnippet codeString={activeElement.bicepCode} language="bicep" />
-                </TabsContent>
-                <TabsContent value="arm">
-                  {activeElement?.resource && activeElement?.entity && (
-                    <URLBox
-                      href={`https://learn.microsoft.com/en-us/azure/templates/${activeElement?.resource}/${activeElement?.entity}?pivots=deployment-language-arm-template`}
-                      text="Official Documentation"
-                      className="mr-6 my-4"
-                      icon={<Icons.Microsoft width={20} height={20} />}
-                      size="md"
-                    />
-                  )}
-                  <CodeSnippet codeString={activeElement.armCode} language="json" />
-                </TabsContent>
+                {provider === 'azure' && (
+                  <>
+                    <TabsContent value="bicep">
+                      {activeElement?.resource && activeElement?.entity && (
+                        <URLBox
+                          href={`https://learn.microsoft.com/en-us/azure/templates/${activeElement?.resource}/${activeElement?.entity}?pivots=deployment-language-bicep`}
+                          text="Official Documentation"
+                          className="mr-6 my-4"
+                          icon={<Icons.Microsoft width={20} height={20} />}
+                          size="md"
+                        />
+                      )}
+                      <CodeSnippet codeString={activeElement.bicepCode} language="bicep" />
+                    </TabsContent>
+                    <TabsContent value="arm">
+                      {activeElement?.resource && activeElement?.entity && (
+                        <URLBox
+                          href={`https://learn.microsoft.com/en-us/azure/templates/${activeElement?.resource}/${activeElement?.entity}?pivots=deployment-language-arm-template`}
+                          text="Official Documentation"
+                          className="mr-6 my-4"
+                          icon={<Icons.Microsoft width={20} height={20} />}
+                          size="md"
+                        />
+                      )}
+                      <CodeSnippet codeString={activeElement.armCode} language="json" />
+                    </TabsContent>
+                  </>
+                )}
               </Tabs>
             </CardContent>
           </Card>
@@ -321,15 +338,15 @@ ALWAYS return valid markdown.
                   />
                 )}
                 <URLBox
-                  href="https://shell.azure.com"
+                  href={shellHref}
                   text={shellText}
                   size="md"
                   className="mr-4 mb-2"
                   icon={<ProviderCloudIcon width={20} height={20} />}
                 />
                 <URLBox
-                  href="https://azure.microsoft.com/en-us/pricing/calculator/"
-                  text={isMobile ? 'Pricing' : 'Pricing Calculator'}
+                  href={pricingHref}
+                  text={pricingText}
                   size="md"
                   className="mr-4 mb-2"
                   icon={<ProviderIcon width={20} height={20} />}
