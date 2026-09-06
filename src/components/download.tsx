@@ -3,10 +3,13 @@ import { Button } from './ui/button';
 import { useState } from 'react';
 import html2canvas from 'html2canvas';
 import { useCloudProvider } from '@/contexts/CloudProviderContext';
+import { useTranslation } from '@/i18n/LanguageContext';
+import { logger } from '@/lib/logger';
 
 export function Download() {
   const [isDownloading, setIsDownloading] = useState(false);
   const { provider } = useCloudProvider();
+  const t = useTranslation();
 
   const downloadFile = async () => {
     const element = document.getElementById('exportable-table-container');
@@ -14,6 +17,20 @@ export function Download() {
 
     setIsDownloading(true);
     try {
+      // html2canvas paints whatever is decoded at that instant, so icons that
+      // are still loading (or that just fell back to the default one) would be
+      // missing from the export. Wait for every image of the table first.
+      await Promise.all(
+        Array.from(element.querySelectorAll('img')).map((image) =>
+          image.complete
+            ? Promise.resolve()
+            : new Promise<void>((resolve) => {
+                image.addEventListener('load', () => resolve(), { once: true });
+                image.addEventListener('error', () => resolve(), { once: true });
+              })
+        )
+      );
+
       const canvas = await html2canvas(element, {
         backgroundColor: '#000000', // Matches the dark theme background
         scale: 2, // Higher resolution
@@ -27,7 +44,7 @@ export function Download() {
       a.download = `${provider}-periodic-table.png`;
       a.click();
     } catch (error) {
-      console.error('Failed to generate image', error);
+      logger.error('download', 'Failed to generate the table image', error);
     } finally {
       setIsDownloading(false);
     }
@@ -43,7 +60,9 @@ export function Download() {
       className="mx-2 flex"
     >
       <DownloadIcon className="w-4 h-4" />
-      <span className="ml-2">{isDownloading ? 'Exporting...' : 'Download'}</span>
+      <span className="ml-2">
+        {isDownloading ? t('topbar.downloading') : t('topbar.download')}
+      </span>
     </Button>
   );
 }

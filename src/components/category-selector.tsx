@@ -1,6 +1,7 @@
 /* src/components/category-selector.tsx */
 
 import { Categories } from '@/app/constants';
+import { useTranslation } from '@/i18n/LanguageContext';
 
 export type CategoryData = {
   name: Categories;
@@ -16,6 +17,8 @@ export const CategorySelector = ({
   setActiveCategory: Function;
   categoryData: CategoryData;
 }) => {
+  const t = useTranslation();
+
   return (
     <div className="hidden xl:flex flex-shrink flex-wrap overflow-hidden xl:flex-col  w-auto text-white mx-auto">
       {categoryData.map((item, i) => {
@@ -33,7 +36,9 @@ export const CategorySelector = ({
               )
             }
           >
-            <span className="mr-2 whitespace-nowrap">{item.name}</span>
+            <span className="mr-2 whitespace-nowrap">
+              {t(`category.${item.name}`)}
+            </span>
             <div
               className={`mx-1 lg:mx-0 w-6 h-6 rounded my-1 ${item.color}`}
             ></div>

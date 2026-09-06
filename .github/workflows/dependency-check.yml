@@ -1,0 +1,40 @@
+name: Dependency check
+
+# Weekly (and on demand) report of outdated packages and known vulnerabilities.
+# The report is written to the job summary; the job never fails on its own so
+# a pre-existing advisory does not block the pipeline.
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Every Monday at 06:00 UTC
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'package.json'
+      - 'yarn.lock'
+
+jobs:
+  dependencies:
+    name: Outdated packages and advisories
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Write the report to the job summary
+        run: node scripts/check-deps.mjs --markdown >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Print the advisories
+        continue-on-error: true
+        run: yarn audit --level high

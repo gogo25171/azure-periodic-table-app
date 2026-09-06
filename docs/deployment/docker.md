@@ -1,38 +1,47 @@
 # Deploy with Docker
 
-This guide will walk you through the steps to deploy this application using Docker.
+## Prerequisites
 
-### Prerequisites
+- [Docker](https://docs.docker.com/engine/install/) installed on your machine.
 
-Before you start, ensure you have the following installed:
-
-- [Docker](https://docs.docker.com/engine/install/) - Download and install Docker for your operating system.
-
-### Getting Started
-
-1. Clone the docker image:
+## Using the published image
 
 ```bash
 docker pull onwardplatforms/azure-periodic-table-dockerversion
+docker run -d -p 3000:3000 onwardplatforms/azure-periodic-table-dockerversion
+docker ps
 ```
 
-2. Once you pulled the image, use the below command to check the docker images
+The application answers on <http://localhost:3000>.
+
+## Building the image yourself
+
+The `docker/Dockerfile` builds from Node.js 20 (the version used by CI) and
+runs `yarn build` then `yarn start`:
 
 ```bash
-docker images
+docker build -f docker/Dockerfile -t cloud-periodic-table .
+docker run -d -p 3000:3000 cloud-periodic-table
 ```
 
-3. Once the image shows up, it's time to run the image on your docker engine.
+## Environment variables
+
+`NEXT_PUBLIC_*` variables are inlined **during the build**, so they must be
+passed as build arguments, not at run time. Server side variables such as
+`ADMIN_PASSWORD` are read at run time:
 
 ```bash
-docker run -d -p 3000:3000 <docker-imageid>
+docker run -d -p 3000:3000 \
+  -e ADMIN_PASSWORD=a-long-random-password \
+  cloud-periodic-table
 ```
 
-4. Please use the below command to verify the DockerImage is running sucessfully.
+To change a public variable, add it to the `Dockerfile` before `yarn build`
+(`ENV NEXT_PUBLIC_SITE_URL=...`) and rebuild the image. The list is documented
+in the [environment variables reference](../reference/environment-variables.md).
 
-```bash
-docker ps -a
-```
+## Automated build
 
----
-*Dernière mise à jour : 22 avril 2026*
+The `docker-build.yml` workflow rebuilds and pushes the image when a file under
+`docker/` changes on `main`. It needs the `DOCKER_USERNAME` and
+`DOCKER_PASSWORD` repository secrets.

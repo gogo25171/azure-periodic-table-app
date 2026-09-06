@@ -1,5 +1,5 @@
-# Use the official Node.js image with Node.js version 16 or higher as the base image
-FROM node:16-alpine
+# Node.js 20 is the version used by CI (Next.js 13 requires 18.17 or higher).
+FROM node:20-alpine
 
 # Set the working directory inside the container
 WORKDIR /usr/src/app
@@ -8,12 +8,12 @@ WORKDIR /usr/src/app
 COPY package.json yarn.lock ./
 
 # Install Node.js dependencies using Yarn
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 # Copy the rest of the application code to the container's working directory
 COPY . .
 
-# Run the build step for your application (if required)
+# Run the build step for your application
 RUN yarn build
 
 # Expose port 3000 for your Node.js application

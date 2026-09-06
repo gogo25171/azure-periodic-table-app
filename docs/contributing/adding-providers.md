@@ -1,168 +1,69 @@
 # Adding new providers
 
-Looking at providers like "Azure" as an example, you can add other cloud providers like AWS, Google Cloud, OVH, etc.
+A provider has to be declared in **ten** places. Missing one produces a silent
+partial failure: a blank icon, an untranslated label, or a resource route that
+renders `null`. The scaffolding script writes all ten for you.
 
-To add a new cloud provider to the periodic table, follow these steps:
+## The scripted way
 
-#### 1. Create the data file
-
-Create a new TypeScript file in `src/app/data/` named after your provider (e.g., `your-provider.ts`). This file must export:
-
-- An `Item` type defining the structure of each resource
-- A `ColumnType` defining the structure of columns
-- A `columns` array containing all resources organized by columns
-
-Example structure:
-
-```typescript
-export type Item = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  length: string;
-  category: Categories;
-  learnUrl: string;
-  terraformUrl: string;
-  restrictions: string;
-  icon: string;
-  terraformCode: string;
-  resource?: string;
-  entity?: string;
-  scope?: string;
-  bicepCode?: string;
-  armCode?: string;
-  pricingReferenceUrl?: string;
-  portalUrl?: string;
-};
-
-export type ColumnType = {
-  items: Item[];
-};
-
-export const columns: ColumnType[] = [
-  {
-    items: [
-      // Your resources here
-    ]
-  }
-];
+```bash
+yarn add:provider --id oracle --name "Oracle Cloud" \
+  --namespace oracle/oci \
+  --prefix oci- \
+  --color text-red-600 \
+  --docs https://docs.oracle.com/en-us/iaas/ \
+  --console https://cloud.oracle.com/ \
+  --pricing https://www.oracle.com/cloud/price-list/
 ```
 
-For a detailed breakdown of the `Item` properties and how to define individual resources, please refer to the [Adding New Resources](adding-resources.md) guide.
+| Option | Default | Description |
+| --- | --- | --- |
+| `--id` | *(required)* | Lowercase identifier, e.g. `oracle`. |
+| `--name` | *(required)* | Display name, e.g. `Oracle Cloud`. |
+| `--namespace` | `<id>/<id>` | Terraform registry namespace, e.g. `oracle/oci`. |
+| `--prefix` | `<id>-` | Prefix applied to every resource id. |
+| `--color` | `text-slate-500` | Tailwind colour of the selector entry. |
+| `--docs`, `--console`, `--pricing`, `--shell` | guessed from the id | Links used by the resource sheet. |
+| `--dry-run` | — | Lists the files that would change, writes nothing. |
 
-#### 2. Add provider icons
+Nothing is written until every edit succeeds, so a failed run leaves the
+repository untouched.
 
-Add the provider's icon in the `Icons` object in `src/components/ui/icons.tsx`:
+## What it touches
 
-```typescript
-export const Icons = {
-  // ... existing icons
-  YourProvider: (props: LucideProps) => (
-    <svg viewBox="..." {...props}>
-      {/* Your SVG content */}
-    </svg>
-  ),
-};
-```
+| # | File | Change |
+| --- | --- | --- |
+| 1 | `src/app/data/<id>.ts` | New dataset with one starter resource. |
+| 2 | `src/components/ui/icons.tsx` | Placeholder icon named after the provider. |
+| 3 | `src/contexts/CloudProviderContext.tsx` | Adds the id to the `CloudProvider` union. |
+| 4 | `src/components/table-wrapper.tsx` | `providerData` and `providerConfig` entries. |
+| 5 | `src/components/cloud-provider-selector.tsx` | Entry of the header dropdown. |
+| 6 | `src/components/sidebar.tsx` | Branch with the provider labels and links. |
+| 7 | `src/app/resource/[id]/page.tsx` | Entry of the `providers` array. |
+| 8 | `src/lib/data-audit.ts` | Dataset, id prefix, keywords and Terraform namespace. |
+| 9 | `scripts/add-resource.mjs` | Adds the provider to the guided prompts. |
+| 10 | `python/terraform-collector.py` | Adds the provider to the snippet collector. |
 
-#### 3. Update the CloudProviderContext
+## After the script
 
-In `src/contexts/CloudProviderContext.tsx`, add your provider to the `CloudProvider` type:
+1. **Replace the placeholder icon** in `src/components/ui/icons.tsx` with the
+   official logo (an inline `<svg>` using `currentColor`).
+2. **Replace the starter resource** in `src/app/data/<id>.ts`, or add real ones
+   with `yarn add:resource`.
+3. **Drop the icon pack** under `public/<id>/icons/<Category>/` if you have one,
+   then point the `icon` field of each resource at it.
+4. **Run the checks**: `yarn validate:data` then `yarn verify`.
+5. **Document it**: add a row to
+   [Cloud providers](../features/providers.md).
 
-```typescript
-export type CloudProvider = 'azure' | 'aws' | 'google' | 'your-provider';
-```
+## Doing it by hand
 
-#### 4. Update the table wrapper
+The same ten edits can be made manually — read
+`scripts/add-provider.mjs`, which lists each anchor and the code it inserts.
+Two details matter:
 
-In `src/components/table-wrapper.tsx`:
-
-- Import your data file:
-
-  ```typescript
-  import * as yourProviderData from '../app/data/your-provider';
-  ```
-
-- Add your provider to `providerData`:
-
-  ```typescript
-  const providerData = {
-    azure: azureData,
-    aws: awsData,
-    google: googleData,
-    'your-provider': yourProviderData,
-  };
-  ```
-
-- Add your provider configuration to `providerConfig`:
-
-  ```typescript
-  const providerConfig = {
-    // ... existing providers
-    'your-provider': {
-      title: 'The Your Provider Periodic Table',
-      subtitle: 'Bringing together core Your Provider content to supercharge your productivity.',
-      subtitleMobile: 'Supercharge your productivity in Your Provider.',
-      icon: Icons.YourProvider,
-    },
-  };
-  ```
-
-#### 5. Update the cloud provider selector
-
-In `src/components/cloud-provider-selector.tsx`, add your provider to `providerConfig`:
-
-```typescript
-const providerConfig = {
-  // ... existing providers
-  'your-provider': {
-    name: 'Your Provider',
-    icon: Icons.YourProvider,
-    color: 'text-your-color',
-  },
-};
-```
-
-#### 6. Update the sidebar dynamic texts
-
-In `src/components/sidebar.tsx`, add your provider to the conditional logic inside the `Sidebar` component to dynamically adjust the UI text, icons, and AI prompt for your cloud provider:
-
-```typescript
-  } else if (provider === 'your-provider') {
-    docText = isMobile ? 'Docs' : 'Your Provider Docs';
-    costText = isMobile ? 'Cost' : 'Your Provider Pricing';
-    ProviderIcon = Icons.YourProvider;
-    ProviderCloudIcon = Icons.YourProvider;
-    portalText = isMobile ? 'Console' : 'Your Provider Console';
-    shellText = isMobile ? 'Shell' : 'Your Provider Shell';
-    providerName = 'Your Provider';
-  }
-```
-
-#### 7. Update the dynamic resource route
-
-In `src/app/resource/[id]/page.tsx`, import your data file and add it to the `providers` array so that clicking on a resource works properly:
-
-```typescript
-import * as yourProviderData from '@/app/data/your-provider';
-
-const providers = [
-  // ... existing providers
-  { id: 'your-provider', data: yourProviderData },
-];
-```
-
-#### 8. Add resource icons
-
-Place all your resource icons in the appropriate subfolder under `public/your-provider/icons/` organized by category (e.g., Compute, Networking, Storage, etc.).
-
-#### 9. Test your implementation
-
-1. Start the development server: `yarn dev`
-2. Navigate to <http://localhost:3000>
-3. Select your provider from the dropdown menu
-4. Verify that all resources display correctly with their icons and information
-
----
-*Dernière mise à jour : 22 avril 2026*
+- the `Item` and `ColumnType` types are **duplicated verbatim** in every
+  provider file; keep them identical or the shared components stop type
+  checking;
+- resource ids must start with the provider prefix, because `/resource/<id>`
+  resolves ids across every dataset.

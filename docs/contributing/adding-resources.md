@@ -1,71 +1,94 @@
 # Adding new resources
 
-To add a new resource (e.g., a new database, compute instance, or networking component) to an existing cloud provider, you only need to modify the provider's specific data file located in `src/app/data/` (for example, `azure.ts`, `aws.ts`, `ovh.ts`, etc.).
+A resource is one entry of the `columns` array of a provider dataset
+(`src/app/data/<provider>.ts`). The array **is** the layout: one entry per
+vertical column of the table, in render order.
 
-#### 1. Define the Resource Item
+## The scripted way
 
-Each provider's data file exports a `columns` array. To add a new resource, you need to append a new `Item` object into one of the existing columns (or create a new column object if you want a new column in the grid).
-
-Here is the full structure of the `Item` type:
-
-```typescript
-export type Item = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  length: string;
-  category: Categories;
-  learnUrl: string;
-  terraformUrl: string;
-  restrictions: string;
-  icon: string;
-  terraformCode: string;
-  resource?: string;
-  entity?: string;
-  scope?: string;
-  bicepCode?: string;
-  armCode?: string;
-  pricingReferenceUrl?: string;
-  portalUrl?: string;
-};
+```bash
+yarn add:resource
 ```
 
-Here is a breakdown of the properties used to define a resource:
+The script asks for every field, suggests an id from the display name, lists the
+available categories, inserts the entry in the column of your choice (or in a
+new column) and finally runs the data checks on the result.
 
-### Mandatory Properties
-- `id`: A unique string identifier for the resource (e.g., `ovh-public-cloud-instance`).
-- `name`: The display name of the resource in the periodic table.
-- `slug`: The prefix or common naming convention for this resource (e.g., `vm-`).
-- `description`: A short explanation of what the resource does.
-- `length`: The allowed character length for the resource name (e.g., `1-63`).
-- `category`: The category the resource belongs to (using the `Categories` enum).
-- `learnUrl`: URL to the official cloud provider documentation.
-- `terraformUrl`: URL to the Terraform registry documentation for the resource.
-- `restrictions`: Allowed characters for the resource name (e.g., 'Alphanumerics and hyphens').
-- `icon`: Path to the resource's specific icon (can be left empty `''` if no icon is available).
-- `terraformCode`: A string containing a functional Terraform code snippet for deployment.
+Non interactive mode, useful for bulk imports:
 
-### Optional Properties (`?`)
-- `resource`: The provider's internal resource namespace.
-- `entity`: The specific entity type.
-- `scope`: The scope of the resource deployment (e.g., `project`, `global`, `tenant`).
-- `bicepCode`: A Bicep code snippet (mainly used for Azure).
-- `armCode`: An ARM template code snippet (mainly used for Azure).
-- `pricingReferenceUrl`: URL to the pricing page for the resource.
-- `portalUrl`: URL to the cloud console or manager to deploy the resource manually.
-- `dnsConfiguration`: Advanced DNS configuration objects (mainly used for Azure Private Endpoints).
+```bash
+yarn add:resource --file resource.json
+cat resource.json | yarn add:resource --file -
+```
 
-#### 2. Add resource icons
+```json
+{
+  "provider": "scaleway",
+  "id": "scaleway-cockpit",
+  "name": "Cockpit",
+  "slug": "obs-",
+  "description": "Observability stack based on Grafana, Prometheus and Loki.",
+  "length": "N/A",
+  "category": "MANAGEMENT",
+  "learnUrl": "https://www.scaleway.com/en/docs/cockpit/",
+  "terraformUrl": "https://registry.terraform.io/providers/scaleway/scaleway/latest/docs/resources/cockpit",
+  "restrictions": "One Cockpit per project.",
+  "resource": "scaleway_cockpit",
+  "entity": "cockpits",
+  "scope": "project",
+  "icon": "",
+  "terraformCode": "resource \"scaleway_cockpit\" \"main\" {\n  plan = \"free\"\n}",
+  "pricingReferenceUrl": "https://www.scaleway.com/en/pricing/",
+  "portalUrl": "https://console.scaleway.com/cockpit/overview",
+  "column": "new"
+}
+```
 
-If you specified an `icon` path in your `Item`, make sure to place the actual icon image file in the appropriate subfolder under `public/<provider-name>/icons/`, organized by category (e.g., Compute, Networking, Storage, etc.).
+`category` accepts the enum key (`MANAGEMENT`) or its label (`Management`).
+`column` accepts a 1 based index or `"new"`.
 
-#### 3. Test your addition
+## The `Item` fields
 
-1. Start the development server: `yarn dev`
-2. Navigate to <http://localhost:3000>
-3. Select the appropriate provider from the dropdown menu
-4. Verify that your new resource displays correctly on the periodic table grid and that its details appear correctly in the sidebar when clicked.
+### Required
 
----
-*Dernière mise à jour : 22 avril 2026*
+| Field | Description |
+| --- | --- |
+| `id` | Unique across **every** provider; it is the URL of the resource sheet. Prefix it with the provider prefix (`aws-`, `gcp-`, `ovh-`, `scaleway-`). |
+| `name` | Name displayed in the cell and in the sheet. |
+| `slug` | Naming prefix of the convention, e.g. `s3-`. Ends with a hyphen. |
+| `description` | One or two sentences describing the service. |
+| `length` | Allowed name length, e.g. `3-63` or `N/A`. |
+| `category` | A value of the `Categories` enum. |
+| `learnUrl` | Official documentation. |
+| `terraformUrl` | Terraform registry page **of the right provider**. |
+| `restrictions` | Allowed characters and constraints. |
+| `icon` | Path under `public/`, or `''` to use the default icon. |
+| `terraformCode` | Snippet displayed in the Code tab. |
+
+### Optional
+
+| Field | Description |
+| --- | --- |
+| `resource`, `entity` | Namespace and entity, displayed as `resource/entity`. |
+| `scope` | `project`, `region`, `global`, `tenant`... |
+| `bicepCode`, `armCode` | Azure only; the extra tabs are hidden elsewhere. |
+| `pricingReferenceUrl` | Pricing page. |
+| `portalUrl` | Console or manager page. |
+| `dnsConfiguration` | Azure private endpoints (sub-resources and DNS zones). |
+
+!!! warning "Snippets can be overridden"
+    If `public/<provider>/code/terraform/<id>.tf` exists, its content replaces
+    `terraformCode` at request time. For Azure, edit the file rather than the
+    dataset.
+
+## Checking your addition
+
+```bash
+yarn validate:data --provider scaleway
+yarn dev     # then pick the provider and click the cell
+```
+
+`yarn validate:data` catches duplicated ids, an id missing its prefix, a
+`terraformUrl` pointing at another vendor, a missing icon file and the empty
+fields. The [admin dashboard](../features/admin.md) shows the same report in the
+browser.

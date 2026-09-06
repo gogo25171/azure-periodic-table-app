@@ -1,24 +1,161 @@
-site_name: Azure Periodic Table
+site_name: Cloud Periodic Table
+site_description: >-
+  Interactive periodic table of Azure, AWS, Google Cloud, OVHcloud and Scaleway
+  resources: naming conventions, restrictions, documentation and infrastructure
+  as code snippets.
+site_author: Onward Platforms
+site_url: https://gogo25171.github.io/azure-periodic-table-app/
+
+repo_url: https://github.com/gogo25171/azure-periodic-table-app
+repo_name: azure-periodic-table-app
+edit_uri: edit/main/docs/
+
 theme:
   name: material
+  language: en
+  icon:
+    repo: fontawesome/brands/github
   features:
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
-    - navigation.expand
+    - navigation.top
+    # navigation.instant is intentionally absent: it is incompatible with the
+    # language switcher of mkdocs-static-i18n.
+    - navigation.footer
+    - toc.follow
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.action.edit
+    - search.suggest
+    - search.highlight
+  palette:
+    - media: '(prefers-color-scheme: light)'
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: '(prefers-color-scheme: dark)'
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+plugins:
+  - search
+  # The documentation is written once, in English. The French version is served
+  # from the same files; a page is only translated when a `*.fr.md` file exists.
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: en
+          name: English
+          default: true
+          build: true
+        - locale: fr
+          name: Français
+          build: true
+          nav_translations:
+            Home: Accueil
+            Getting started: Démarrer
+            Prerequisites: Pré-requis
+            Installation: Installation
+            Configuration: Configuration
+            Running locally: Lancer en local
+            Features: Fonctionnalités
+            Cloud providers: Fournisseurs cloud
+            Languages: Langues
+            Admin dashboard: Interface admin
+            Deployment: Déploiement
+            Docker: Docker
+            Vercel: Vercel
+            GitHub Pages: GitHub Pages
+            Contributing: Contribuer
+            Overview: Vue d'ensemble
+            Adding new providers: Ajouter un fournisseur
+            Adding new resources: Ajouter une ressource
+            Tooling and CI: Outillage et CI
+            Reference: Référence
+            Environment variables: Variables d'environnement
+            Architecture: Architecture
+            About: À propos
+            Credits: Crédits
+  # Replaces the hand written "last updated" footers.
+  - git-revision-date-localized:
+      enable_creation_date: true
+      fallback_to_build_date: true
+      # A page that is not committed yet must not fail `mkdocs build --strict`.
+      strict: false
+      type: date
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/gogo25171/azure-periodic-table-app
+      name: Source code
+    - icon: material/table
+      link: https://azureperiodictable.com/
+      name: The live table
 
 nav:
   - Home: index.md
-  - Getting Started:
-    - Pre-requisites: getting-started/prerequisites.md
-    - Installation: getting-started/installation.md
-    - Configuration: getting-started/configuration.md
-    - Running Locally: getting-started/running-locally.md
+  - Getting started:
+      - Prerequisites: getting-started/1-prerequisites.md
+      - Installation: getting-started/2-installation.md
+      - Configuration: getting-started/3-configuration.md
+      - Running locally: getting-started/4-running-locally.md
+  - Features:
+      - Cloud providers: features/providers.md
+      - Languages: features/languages.md
+      - Admin dashboard: features/admin.md
   - Deployment:
-    - Docker: deployment/docker.md
-    - Vercel: deployment/vercel.md
+      - Docker: deployment/docker.md
+      - Vercel: deployment/vercel.md
+      - GitHub Pages: deployment/github-pages.md
   - Contributing:
-    - Overview: contributing/index.md
-    - Adding New Providers: contributing/adding-providers.md
-    - Adding New Resources: contributing/adding-resources.md
+      - Overview: contributing/index.md
+      - Adding new providers: contributing/adding-providers.md
+      - Adding new resources: contributing/adding-resources.md
+      - Tooling and CI: contributing/tooling.md
+  - Reference:
+      - Environment variables: reference/environment-variables.md
+      - Architecture: reference/architecture.md
   - About:
-    - Credits: about/credits.md
+      - Credits: about/credits.md

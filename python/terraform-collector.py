@@ -5,7 +5,14 @@ import codecs
 import subprocess
 
 # Constants
-NAMESPACE = "hashicorp"
+DEFAULT_NAMESPACE = "hashicorp"
+
+# Where each provider publishes its resource documentation on GitHub, and which
+# branches to try. HashiCorp providers keep the legacy `website/docs/r` layout,
+# the others moved to `docs/resources`.
+HASHICORP_DOCS_PATH = "website/docs/r/{resource}.html.markdown"
+REGISTRY_DOCS_PATH = "docs/resources/{resource}.md"
+BRANCHES = ["main", "master"]
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0'
@@ -67,11 +74,23 @@ def extract_resource_from_terraform_url(url):
         return match.group(1)
     return None
 
-def get_github_raw_url(provider, resource):
+def get_github_raw_urls(cloud, resource):
     """
-    Formulates the raw GitHub URL for the Markdown documentation.
+    Formulates the candidate raw GitHub URLs for the Markdown documentation.
+    Providers do not agree on the layout nor on the default branch, so every
+    combination is tried until one answers.
     """
-    return f"https://raw.githubusercontent.com/{NAMESPACE}/terraform-provider-{provider}/main/website/docs/r/{resource}.html.markdown"
+    namespace = cloud.get("namespace", DEFAULT_NAMESPACE)
+    provider = cloud["provider"]
+    docs_path = cloud.get(
+        "docs_path",
+        HASHICORP_DOCS_PATH if namespace == DEFAULT_NAMESPACE else REGISTRY_DOCS_PATH,
+    )
+    path = docs_path.format(resource=resource)
+    return [
+        f"https://raw.githubusercontent.com/{namespace}/terraform-provider-{provider}/{branch}/{path}"
+        for branch in BRANCHES
+    ]
 
 def fetch_markdown_content(url):
     """
@@ -92,7 +111,8 @@ def extract_terraform_code_blocks(markdown_content):
     """
     Extracts Terraform code blocks from the Markdown content.
     """
-    code_blocks = re.findall(r'```hcl(.*?)```', markdown_content, re.DOTALL)
+    # Providers fence their examples with ```hcl or ```terraform.
+    code_blocks = re.findall(r'```(?:hcl|terraform)(.*?)```', markdown_content, re.DOTALL)
     return code_blocks
 
 def supports_tags(markdown_content):
@@ -132,15 +152,30 @@ cloud_platforms = [
     {
         'name': 'azure',
         'provider': 'azurerm',
+        'namespace': 'hashicorp',
     },
     {
         'name': 'aws',
         'provider': 'aws',
+        'namespace': 'hashicorp',
     },
     {
         'name': 'google',
         'provider': 'google',
-    }
+        'namespace': 'hashicorp',
+    },
+    {
+        'name': 'ovh',
+        'provider': 'ovh',
+        'namespace': 'ovh',
+        'docs_path': 'docs/resources/{resource}.md',
+    },
+    {
+        'name': 'scaleway',
+        'provider': 'scaleway',
+        'namespace': 'scaleway',
+        'docs_path': 'docs/resources/{resource}.md',
+    },
 ]
 
 for cloud in cloud_platforms:
@@ -160,8 +195,13 @@ for cloud in cloud_platforms:
     for id, slug, url in matches:
         resource = extract_resource_from_terraform_url(url)
         if resource:
-            github_raw_url = get_github_raw_url(cloud_provider, resource)
-            markdown_content = fetch_markdown_content(github_raw_url)
+            markdown_content = None
+            github_raw_url = None
+            for candidate in get_github_raw_urls(cloud, resource):
+                markdown_content = fetch_markdown_content(candidate)
+                if markdown_content:
+                    github_raw_url = candidate
+                    break
 
             if markdown_content:
                 code_blocks = extract_terraform_code_blocks(markdown_content)

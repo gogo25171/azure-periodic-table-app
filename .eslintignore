@@ -1,0 +1,12 @@
+# Build outputs and vendored assets: nothing here is written by hand.
+node_modules/
+.next/
+out/
+build/
+coverage/
+
+# MkDocs output (created by `yarn docs:build` / `mkdocs build`)
+site/
+
+# Static assets shipped as-is
+public/

@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 # Parameters
 template_type = "bicep"  # Change to "arm" for ARM templates
-storage_location = "../public/code"  # Default storage location
+storage_location = "../public/azure/code"  # Read back by src/app/resource/[id]/page.tsx
 
 # Constants
 HEADERS = {
@@ -43,8 +43,8 @@ def save_content(content, storage_location, file_name):
 print("Starting the script scraping script...")
 
 
-# Read the content of the data.ts file
-with open('../src/app/data.ts', 'r') as f:
+# Read the content of the Azure data file (Bicep and ARM are Azure only)
+with open('../src/app/data/azure.ts', 'r') as f:
     tsx_content = f.read()
 
 # Define a pattern to match the entity objects, including the id

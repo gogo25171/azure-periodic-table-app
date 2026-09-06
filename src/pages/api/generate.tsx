@@ -1,21 +1,40 @@
 // src/pages/api/generate.tsx
 
-import axios from 'axios';
+import { Readable } from 'node:stream';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { logger } from '@/lib/logger';
 
+/**
+ * Proxies a streamed completion from OpenAI to the browser as Server-Sent
+ * Events. Uses the runtime `fetch` (Node 18+) rather than an HTTP client
+ * dependency.
+ */
 const handleRequest = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (!process.env.OPENAI_API_KEY) {
+    logger.warn('chat', 'OPENAI_API_KEY is missing, refusing the request');
+    return res.status(503).json({ error: 'not-configured' });
+  }
+
   try {
-    const openaiResponse = await axios.post(
+    const openaiResponse = await fetch(
       'https://api.openai.com/v1/chat/completions',
-      req.body,
       {
+        method: 'POST',
         headers: {
-          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
           'Content-Type': 'application/json',
         },
-        responseType: 'stream', // Enable streaming
+        body: JSON.stringify(req.body),
       }
     );
+
+    if (!openaiResponse.ok || !openaiResponse.body) {
+      logger.error(
+        'chat',
+        `OpenAI answered ${openaiResponse.status} ${openaiResponse.statusText}`
+      );
+      return res.status(502).json({ error: 'Request failed' });
+    }
 
     // Set headers to enable Server-Sent Events (SSE)
     res.setHeader('Content-Type', 'text/event-stream');
@@ -23,20 +42,14 @@ const handleRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     res.setHeader('Connection', 'keep-alive');
 
     // Pipe the OpenAI response stream directly to the client
-    openaiResponse.data.pipe(res);
-
-    // Handle the end of the OpenAI stream
-    openaiResponse.data.on('end', () => {
+    const stream = Readable.fromWeb(openaiResponse.body as any);
+    stream.on('error', (error) => {
+      logger.error('chat', 'Error while streaming the OpenAI response', error);
       res.end();
     });
-
-    // Handle errors from the OpenAI stream
-    openaiResponse.data.on('error', (error: any) => {
-      console.error('Error in OpenAI stream:', error);
-      res.end();
-    });
+    stream.pipe(res);
   } catch (error) {
-    console.log(error);
+    logger.error('chat', 'The OpenAI request failed', error);
     res.status(500).json({ error: 'Request failed' });
   }
 };

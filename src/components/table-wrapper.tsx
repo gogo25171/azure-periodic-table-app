@@ -17,7 +17,9 @@ import Header from '@/components/header';
 import { Icons } from '@/components/ui/icons';
 import { Label } from '@/components/ui/label';
 import useMobile from '@/custom-hooks/use-mobile';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import { useTranslation } from '@/i18n/LanguageContext';
+import { logger } from '@/lib/logger';
 
 const providerData = {
   azure: azureData,
@@ -28,36 +30,11 @@ const providerData = {
 };
 
 const providerConfig = {
-  azure: {
-    title: 'The Azure Periodic Table',
-    subtitle: 'Bringing together core Azure content to supercharge your productivity.',
-    subtitleMobile: 'Supercharge your productivity in Azure.',
-    icon: Icons.Azure,
-  },
-  aws: {
-    title: 'The AWS Periodic Table',
-    subtitle: 'Bringing together core AWS content to supercharge your productivity.',
-    subtitleMobile: 'Supercharge your productivity in AWS.',
-    icon: Icons.AWS,
-  },
-  google: {
-    title: 'The Google Cloud Periodic Table',
-    subtitle: 'Bringing together core Google Cloud content to supercharge your productivity.',
-    subtitleMobile: 'Supercharge your productivity in Google Cloud.',
-    icon: Icons.Google,
-  },
-  ovh: {
-    title: 'The OVHcloud Periodic Table',
-    subtitle: 'Bringing together core OVHcloud content to supercharge your productivity.',
-    subtitleMobile: 'Supercharge your productivity in OVHcloud.',
-    icon: Icons.OVH,
-  },
-  scaleway: {
-    title: 'The Scaleway Periodic Table',
-    subtitle: 'Bringing together core Scaleway content to supercharge your productivity.',
-    subtitleMobile: 'Supercharge your productivity in Scaleway.',
-    icon: Icons.Scaleway,
-  },
+  azure: { name: 'Azure', icon: Icons.Azure },
+  aws: { name: 'AWS', icon: Icons.AWS },
+  google: { name: 'Google Cloud', icon: Icons.Google },
+  ovh: { name: 'OVHcloud', icon: Icons.OVH },
+  scaleway: { name: 'Scaleway', icon: Icons.Scaleway },
 };
 
 export default function TableWrapper({ children }: { children: JSX.Element }) {
@@ -72,8 +49,14 @@ export default function TableWrapper({ children }: { children: JSX.Element }) {
   const [activeCategory, setActiveCategory] = useState<Categories | null>(null);
   const { toggleFullScreen, isFullScreen } = useFullScreen();
   const isMobile = useMobile();
+  const t = useTranslation();
 
   const navigate = useRouter();
+  const pathname = usePathname();
+
+  // Standalone routes (the admin dashboard for instance) render on their own:
+  // the layout always mounts this wrapper, so the table is opted out here.
+  const isStandaloneRoute = pathname?.startsWith('/admin') ?? false;
 
   // when there's one result left after user searches for an element, set that element as active element only if they hit enter
   // to listen for keystroke it needs to be a usEffect
@@ -93,6 +76,10 @@ export default function TableWrapper({ children }: { children: JSX.Element }) {
 
         if (filteredElements.length === 1) {
           // go to that element in the url
+          logger.debug(
+            'search',
+            `Single match for "${textSearch}", opening ${filteredElements[0].id}`
+          );
           navigate.push(`/resource/${filteredElements[0].id}`);
         }
       }
@@ -102,6 +89,10 @@ export default function TableWrapper({ children }: { children: JSX.Element }) {
       window.removeEventListener('keydown', handleSearchEnter);
     };
   }, [textSearch, navigate, data.columns]);
+
+  if (isStandaloneRoute) {
+    return <>{children}</>;
+  }
 
   return (
     <main
@@ -119,10 +110,12 @@ export default function TableWrapper({ children }: { children: JSX.Element }) {
                 <ProviderIcon className="h-12 w-12 md:h-16 md:w-16 self-center mr-4" />
                 <div className="flex flex-col">
                   <h1 className="md:text-4xl font-bold leading-tight tracking-tighter lg:leading-[1.1] text-2xl">
-                    {config.title}
+                    {t('table.title', { provider: config.name })}
                   </h1>
                   <Label className="mt-2">
-                    {isMobile ? config.subtitleMobile : config.subtitle}
+                    {isMobile
+                      ? t('table.subtitleMobile', { provider: config.name })
+                      : t('table.subtitle', { provider: config.name })}
                   </Label>
                 </div>
               </div>
@@ -140,6 +133,7 @@ export default function TableWrapper({ children }: { children: JSX.Element }) {
           {children}
 
           <Topbar
+            providerName={config.name}
             activeCategory={activeCategory}
             isFullScreen={isFullScreen}
             open={open}

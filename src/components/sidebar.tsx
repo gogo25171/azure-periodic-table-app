@@ -14,6 +14,7 @@ import { CopyBox } from './ui/copy-box';
 import { Icons } from './ui/icons';
 import { ChatBox } from './chatbox';
 import { URLBox } from './ui/url-box';
+import { useTranslation } from '@/i18n/LanguageContext';
 
 import {
   Sheet,
@@ -46,6 +47,7 @@ export default function Sidebar({
   const [open, setOpen] = useState(true);
   const isMobile = useMobile();
   const navigate = useRouter();
+  const t = useTranslation();
 
   if (!activeElement) return null;
 
@@ -154,7 +156,7 @@ ALWAYS return valid markdown.
             width={44}
             height={44}
             alt={`icon for ${activeElement.name}`}
-            src={`${prefix}${activeElement.icon}`}
+            src={`${prefix}${activeElement.icon || '/default-icon.svg'}`}
             onError={(e) => {
               e.currentTarget.src = `${prefix}/default-icon.svg`;
               e.currentTarget.srcset = '';
@@ -170,32 +172,30 @@ ALWAYS return valid markdown.
         <div className="my-6">
           <Card>
             <CardHeader>
-              <CardTitle>General</CardTitle>
-              <CardDescription>
-                General information about the service.
-              </CardDescription>
+              <CardTitle>{t('sidebar.general')}</CardTitle>
+              <CardDescription>{t('sidebar.generalDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="mb-4">
-                <Label>Description</Label>
+                <Label>{t('sidebar.description')}</Label>
                 <p>{activeElement.description}</p>
               </div>
               <div className="mb-4">
-                <Label>Namespace and Entity</Label>
+                <Label>{t('sidebar.namespaceEntity')}</Label>
                 <CopyBox text={`${activeElement?.resource}/${activeElement?.entity}`} />
               </div>
               <div className="mb-4">
-                <Label>Category</Label>
+                <Label>{t('sidebar.category')}</Label>
                 <div
                   className={`flex items-center py-1 px-2 w-fit rounded my-2 text-white ${
                     categoryData.find((item) => item.name === activeElement.category)?.color
                   }`}
                 >
-                  {activeElement.category}
+                  {t(`category.${activeElement.category}`)}
                 </div>
               </div>
               <div className="mb-4">
-                <Label>References</Label>
+                <Label>{t('sidebar.references')}</Label>
                 <div className="flex flex-wrap">
                   {activeElement?.learnUrl && (
                     <URLBox
@@ -227,15 +227,13 @@ ALWAYS return valid markdown.
             <Card>
               <CardHeader>
                 <div className="flex items-center space-x-2">
-                  <CardTitle>Chat</CardTitle>
+                  <CardTitle>{t('sidebar.chat')}</CardTitle>
                   <div className="flex items-center bg-gray-200 dark:bg-gray-700 text-xs px-2 py-1 rounded">
                     <Icons.Wand2 width={16} height={16} className="mr-1" />
-                    <span>Powered by AI</span>
+                    <span>{t('sidebar.poweredByAi')}</span>
                   </div>
                 </div>
-                <CardDescription>
-                  Talk to this service to learn more about it.
-                </CardDescription>
+                <CardDescription>{t('sidebar.chatDescription')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <ChatBox prompt={prompt} />
@@ -248,26 +246,24 @@ ALWAYS return valid markdown.
         <div className="my-6">
           <Card>
             <CardHeader>
-              <CardTitle>Naming</CardTitle>
-              <CardDescription>
-                The conventions, rules, and restrictions for naming this service.
-              </CardDescription>
+              <CardTitle>{t('sidebar.naming')}</CardTitle>
+              <CardDescription>{t('sidebar.namingDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="mb-4">
-                <Label>Naming Convention</Label>
+                <Label>{t('sidebar.namingConvention')}</Label>
                 <CopyBox text={activeElement.slug} />
               </div>
               <div className="mb-4">
-                <Label>Length</Label>
+                <Label>{t('sidebar.length')}</Label>
                 <p>{activeElement?.length || 'N/A'}</p>
               </div>
               <div className="mb-4">
-                <Label>Valid Characters</Label>
+                <Label>{t('sidebar.validCharacters')}</Label>
                 <p>{activeElement?.restrictions || 'N/A'}</p>
               </div>
               <div className="mb-4">
-                <Label>Scope</Label>
+                <Label>{t('sidebar.scope')}</Label>
                 <p>{activeElement?.scope || 'N/A'}</p>
               </div>
             </CardContent>
@@ -278,10 +274,8 @@ ALWAYS return valid markdown.
         <div className="my-6">
           <Card>
             <CardHeader>
-              <CardTitle>Code</CardTitle>
-              <CardDescription>
-                Deploy your infrastructure as code using your preferred tooling.
-              </CardDescription>
+              <CardTitle>{t('sidebar.code')}</CardTitle>
+              <CardDescription>{t('sidebar.codeDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="terraform">
@@ -298,7 +292,7 @@ ALWAYS return valid markdown.
                   {activeElement?.terraformUrl && (
                     <URLBox
                       href={activeElement.terraformUrl}
-                      text="Official Documentation"
+                      text={t('sidebar.officialDocumentation')}
                       className="mr-6 my-4"
                       icon={<Icons.Terraform width={20} height={20} />}
                       size="md"
@@ -312,7 +306,7 @@ ALWAYS return valid markdown.
                       {activeElement?.resource && activeElement?.entity && (
                         <URLBox
                           href={`https://learn.microsoft.com/en-us/azure/templates/${activeElement?.resource}/${activeElement?.entity}?pivots=deployment-language-bicep`}
-                          text="Official Documentation"
+                          text={t('sidebar.officialDocumentation')}
                           className="mr-6 my-4"
                           icon={<Icons.Microsoft width={20} height={20} />}
                           size="md"
@@ -324,7 +318,7 @@ ALWAYS return valid markdown.
                       {activeElement?.resource && activeElement?.entity && (
                         <URLBox
                           href={`https://learn.microsoft.com/en-us/azure/templates/${activeElement?.resource}/${activeElement?.entity}?pivots=deployment-language-arm-template`}
-                          text="Official Documentation"
+                          text={t('sidebar.officialDocumentation')}
                           className="mr-6 my-4"
                           icon={<Icons.Microsoft width={20} height={20} />}
                           size="md"
@@ -343,10 +337,8 @@ ALWAYS return valid markdown.
         <div className="my-6">
           <Card>
             <CardHeader>
-              <CardTitle>Utilities</CardTitle>
-              <CardDescription>
-                Utilities to support app deployment or configuration.
-              </CardDescription>
+              <CardTitle>{t('sidebar.utilities')}</CardTitle>
+              <CardDescription>{t('sidebar.utilitiesDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap">
@@ -383,29 +375,29 @@ ALWAYS return valid markdown.
           <div className="my-6">
             <Card>
               <CardHeader>
-                <CardTitle>Private Endpoints</CardTitle>
+                <CardTitle>{t('sidebar.privateEndpoints')}</CardTitle>
                 <CardDescription>
-                  Details to successfully deploy private endpoints on Azure.
+                  {t('sidebar.privateEndpointsDescription')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="commercial">
                   <TabsList>
                     {(activeElement?.dnsConfiguration?.commercial?.subresourceNames?.length ?? 0) > 0 && (
-                      <TabsTrigger value="commercial">Commercial</TabsTrigger>
+                      <TabsTrigger value="commercial">{t('sidebar.commercial')}</TabsTrigger>
                     )}
                     {(activeElement?.dnsConfiguration?.government?.subresourceNames?.length ?? 0) > 0 && (
-                      <TabsTrigger value="government">Government</TabsTrigger>
+                      <TabsTrigger value="government">{t('sidebar.government')}</TabsTrigger>
                     )}
                     {(activeElement?.dnsConfiguration?.china?.subresourceNames?.length ?? 0) > 0 && (
-                      <TabsTrigger value="china">China</TabsTrigger>
+                      <TabsTrigger value="china">{t('sidebar.china')}</TabsTrigger>
                     )}
                   </TabsList>
 
                   {(activeElement?.dnsConfiguration?.commercial?.subresourceNames?.length ?? 0) > 0 && (
                     <TabsContent value="commercial">
                       <div className="mt-6">
-                        <Label>Sub-Resource Names</Label>
+                        <Label>{t('sidebar.subResourceNames')}</Label>
                         <div className="flex flex-wrap">
                           {activeElement?.dnsConfiguration?.commercial?.subresourceNames?.map(
                             (name, index) => (
@@ -415,7 +407,7 @@ ALWAYS return valid markdown.
                         </div>
                       </div>
                       <div className="mt-6">
-                        <Label>Private DNS Zone Names</Label>
+                        <Label>{t('sidebar.privateDnsZoneNames')}</Label>
                         <div className="flex flex-wrap">
                           {activeElement?.dnsConfiguration?.commercial?.privateDnsZoneNames?.map(
                             (name, index) => (
@@ -425,7 +417,7 @@ ALWAYS return valid markdown.
                         </div>
                       </div>
                       <div className="mt-6">
-                        <Label>Public DNS Zone Forwarders</Label>
+                        <Label>{t('sidebar.publicDnsForwarders')}</Label>
                         <div className="flex flex-wrap">
                           {activeElement?.dnsConfiguration?.commercial?.publicDnsForwarderNames?.map(
                             (name, index) => (
@@ -440,7 +432,7 @@ ALWAYS return valid markdown.
                   {(activeElement?.dnsConfiguration?.government?.subresourceNames?.length ?? 0) > 0 && (
                     <TabsContent value="government">
                       <div className="mt-6">
-                        <Label>Sub-Resource Names</Label>
+                        <Label>{t('sidebar.subResourceNames')}</Label>
                         <div className="flex flex-wrap">
                           {activeElement?.dnsConfiguration?.government?.subresourceNames?.map(
                             (name, index) => (
@@ -450,7 +442,7 @@ ALWAYS return valid markdown.
                         </div>
                       </div>
                       <div className="mt-6">
-                        <Label>Private DNS Zone Names</Label>
+                        <Label>{t('sidebar.privateDnsZoneNames')}</Label>
                         <div className="flex flex-wrap">
                           {activeElement?.dnsConfiguration?.government?.privateDnsZoneNames?.map(
                             (name, index) => (
@@ -460,7 +452,7 @@ ALWAYS return valid markdown.
                         </div>
                       </div>
                       <div className="mt-6">
-                        <Label>Public DNS Zone Forwarders</Label>
+                        <Label>{t('sidebar.publicDnsForwarders')}</Label>
                         <div className="flex flex-wrap">
                           {activeElement?.dnsConfiguration?.government?.publicDnsForwarderNames?.map(
                             (name, index) => (
@@ -475,7 +467,7 @@ ALWAYS return valid markdown.
                   {(activeElement?.dnsConfiguration?.china?.subresourceNames?.length ?? 0) > 0 && (
                     <TabsContent value="china">
                       <div className="mt-6">
-                        <Label>Sub-Resource Names</Label>
+                        <Label>{t('sidebar.subResourceNames')}</Label>
                         <div className="flex flex-wrap">
                           {activeElement?.dnsConfiguration?.china?.subresourceNames?.map(
                             (name, index) => (
@@ -485,7 +477,7 @@ ALWAYS return valid markdown.
                         </div>
                       </div>
                       <div className="mt-6">
-                        <Label>Private DNS Zone Names</Label>
+                        <Label>{t('sidebar.privateDnsZoneNames')}</Label>
                         <div className="flex flex-wrap">
                           {activeElement?.dnsConfiguration?.china?.privateDnsZoneNames?.map(
                             (name, index) => (
@@ -495,7 +487,7 @@ ALWAYS return valid markdown.
                         </div>
                       </div>
                       <div className="mt-6">
-                        <Label>Public DNS Zone Forwarders</Label>
+                        <Label>{t('sidebar.publicDnsForwarders')}</Label>
                         <div className="flex flex-wrap">
                           {activeElement?.dnsConfiguration?.china?.publicDnsForwarderNames?.map(
                             (name, index) => (

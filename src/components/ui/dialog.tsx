@@ -10,12 +10,11 @@ const Dialog = DialogPrimitive.Root;
 
 const DialogTrigger = DialogPrimitive.Trigger;
 
-const DialogPortal = ({
-  className,
-  ...props
-}: DialogPrimitive.DialogPortalProps) => (
-  <DialogPrimitive.Portal className={cn(className)} {...props} />
-);
+// Radix 1.1 removed `className` from Portal: styling happens on the overlay
+// and the content below.
+const DialogPortal = (
+  props: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Portal>
+) => <DialogPrimitive.Portal {...props} />;
 DialogPortal.displayName = DialogPrimitive.Portal.displayName;
 
 const DialogOverlay = React.forwardRef<

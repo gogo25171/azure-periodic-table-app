@@ -12,6 +12,9 @@ import {
   type Icon as LucideIcon,
   Layers,
   ExternalLink,
+  Languages,
+  BookOpen,
+  ShieldAlert,
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -27,6 +30,9 @@ export const Icons = {
   Send,
   ExternalLink,
   Wand2,
+  Languages,
+  BookOpen,
+  ShieldAlert,
   Logo: Layers,
   GitHub: (props: LucideProps) => (
     <svg viewBox="0 0 438.549 438.549" {...props}>

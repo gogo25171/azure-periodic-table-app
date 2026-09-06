@@ -1,0 +1,68 @@
+name: CI
+
+# Runs on every push and pull request so a broken dataset or a type error is
+# caught before it reaches main. Locally the same checks run with:
+#   yarn check      (or yarn gh:check, which also shows the Actions status)
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Lint, types, tests, data and build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Type check
+        run: yarn typecheck
+
+      - name: Tests
+        run: yarn test
+
+      - name: Validate provider data
+        run: yarn validate:data
+
+      - name: Build
+        run: yarn build
+
+  credits:
+    name: Contributors list is up to date
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Check docs/about/credits.md
+        run: node scripts/update-credits.mjs --check

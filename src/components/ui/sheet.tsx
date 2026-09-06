@@ -15,12 +15,11 @@ const SheetTrigger = SheetPrimitive.Trigger;
 
 const SheetClose = SheetPrimitive.Close;
 
-const SheetPortal = ({
-  className,
-  ...props
-}: SheetPrimitive.DialogPortalProps) => (
-  <SheetPrimitive.Portal className={cn(className)} {...props} />
-);
+// Radix 1.1 removed `className` from Portal: styling happens on the overlay
+// and the content below.
+const SheetPortal = (
+  props: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Portal>
+) => <SheetPrimitive.Portal {...props} />;
 SheetPortal.displayName = SheetPrimitive.Portal.displayName;
 
 const SheetOverlay = React.forwardRef<

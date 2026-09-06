@@ -2,6 +2,7 @@
 
 import { ThemeProvider } from '@/components/theme-provider';
 import { CloudProviderProvider } from '@/contexts/CloudProviderContext';
+import { LanguageProvider, DEFAULT_LANGUAGE } from '@/i18n/LanguageContext';
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -30,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" style={{ width: '100%' }}>
+    <html lang={DEFAULT_LANGUAGE} style={{ width: '100%' }}>
       <Head>
         <title>Azure Periodic Table</title>
         <meta property="og:title" content="Azure Periodic Table" key="title" />
@@ -61,11 +62,13 @@ export default function RootLayout({
       </Script>
       <body className={inter.className} style={{ width: '100%' }}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <CloudProviderProvider>
-            <TableWrapper>
-              <>{children}</>
-            </TableWrapper>
-          </CloudProviderProvider>
+          <LanguageProvider>
+            <CloudProviderProvider>
+              <TableWrapper>
+                <>{children}</>
+              </TableWrapper>
+            </CloudProviderProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

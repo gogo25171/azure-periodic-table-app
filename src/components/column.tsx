@@ -137,22 +137,21 @@ const Cell: React.FC<CellProps> = ({
       >
         <div className="flex flex-col  relative h-full w-full">
           <div className="flex w-full justify-between items-center">
-            {item.icon ? (
-              <figure>
-                <Image
-                  alt={`icon for ${item.name}`}
-                  width={10}
-                  height={10}
-                  className=""
-                  src={`${prefix}${item.icon}`}
-                  onError={(e) => {
-                    e.currentTarget.src = `${prefix}/default-icon.svg`;
-                    e.currentTarget.srcset = '';
-                  }}
-                />
-                <figcaption className="hidden">{`Icon for ${item.name}`}</figcaption>
-              </figure>
-            ) : null}
+            {/* Resources without an icon still show the default one. */}
+            <figure>
+              <Image
+                alt={`icon for ${item.name}`}
+                width={10}
+                height={10}
+                className=""
+                src={`${prefix}${item.icon || '/default-icon.svg'}`}
+                onError={(e) => {
+                  e.currentTarget.src = `${prefix}/default-icon.svg`;
+                  e.currentTarget.srcset = '';
+                }}
+              />
+              <figcaption className="hidden">{`Icon for ${item.name}`}</figcaption>
+            </figure>
             <span className="text-[0.5rem]">{item.length ?? '1-100'}</span>
           </div>
           <h2

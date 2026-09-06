@@ -11,8 +11,8 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import { categoryData } from './periodic-table';
-import { Item } from '@/app/data/azure';
 import { Categories } from '@/app/constants';
+import { useTranslation } from '@/i18n/LanguageContext';
 
 export default function Topbar({
   setTextSearch,
@@ -22,6 +22,7 @@ export default function Topbar({
   open,
   activeCategory,
   setActiveCategory,
+  providerName,
 }: {
   setTextSearch: Function;
   toggleFullScreen: Function;
@@ -30,7 +31,10 @@ export default function Topbar({
   open: boolean;
   activeCategory: Categories | null;
   setActiveCategory: Function;
+  providerName: string;
 }) {
+  const t = useTranslation();
+
   return (
     <div className="flex justify-center  items-center w-full border-b border-border p-4">
       <div className="hidden lg:flex flex-1 mr-auto w-full xl:w-auto">
@@ -39,13 +43,18 @@ export default function Topbar({
       </div>
 
       <div className="flex justify-center items-center w-full xl:w-auto">
-        <Search className="mx-2 flex-2" setTextSearch={setTextSearch} />
+        <Search
+          className="mx-2 flex-2"
+          setTextSearch={setTextSearch}
+          placeholder={t('topbar.searchPlaceholder', { provider: providerName })}
+        />
         <div className="flex xl:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 onClick={() => setOpen((prev: boolean) => !prev)}
                 variant={'secondary'}
+                aria-label={t('topbar.filter')}
               >
                 <FilterIcon className="h-4 w-4" />
               </Button>
@@ -74,7 +83,9 @@ export default function Topbar({
                       <div
                         className={`px-1 lg:mx-0 w-6 h-6 rounded my-1 ${item.color}`}
                       ></div>
-                      <span className="text-sm px-2">{item.name}</span>
+                      <span className="text-sm px-2">
+                        {t(`category.${item.name}`)}
+                      </span>
                     </Button>
                   </DropdownMenuItem>
                 );
@@ -91,6 +102,9 @@ export default function Topbar({
             toggleFullScreen();
           }}
           className=""
+          aria-label={
+            isFullScreen ? t('topbar.exitFullScreen') : t('topbar.fullScreen')
+          }
         >
           {isFullScreen ? (
             <Shrink className="w-4 h-4" />

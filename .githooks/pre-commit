@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# Runs lint, the TypeScript check and the provider data checks before a commit.
+#
+# Enable it once with:            yarn hooks:install
+# Skip it for a single commit:    git commit --no-verify
+#
+# Note: this hook runs on *every* commit. If you would rather check once per
+# push, rename this file to .githooks/pre-push - the command is the same.
+#
+
+echo "Running the pre-commit checks (yarn gh:check --local)..."
+
+node scripts/gh-check.mjs --local
+status=$?
+
+if [ $status -ne 0 ]; then
+  echo ""
+  echo "Commit aborted: fix the checks above, or commit again with --no-verify."
+fi
+
+exit $status
