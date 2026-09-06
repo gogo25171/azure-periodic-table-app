@@ -53,6 +53,18 @@
   > **Note** : une liste de cases à cocher brute n'apporte rien de plus que le fichier `TODO.md` du dépôt. Ce qui vaudrait le coup : une page « Roadmap » avec (a) un diagramme Mermaid `gantt` ou `timeline` des chantiers (Mermaid est déjà activé dans MkDocs via `pymdownx.superfences`), (b) des cartes Material (`grid cards`) par chantier avec statut et effort estimé, (c) des badges d'état, et (d) éventuellement les compteurs réels (ressources par provider, erreurs de données) générés automatiquement depuis `yarn validate:data --json` au moment du build.
   > **Attention** : le TODO est en français alors que la doc est en anglais → soit on le traduit (page `roadmap.md` en anglais + `roadmap.fr.md` pour la version française), soit on l'assume comme page francophone. Et il faudra choisir une source unique : soit `TODO.md` est généré depuis la page de doc, soit l'inverse, sinon les deux vont diverger.
 
+- [ ] Pouvoir brancher d'autres IA que OpenAI sur le chat des fiches ressources.
+  > **Note** : la route `src/pages/api/generate.tsx` appelle l'API OpenAI en dur (URL, en-tête `Authorization`, format de stream) et le composant `chatbox.tsx` lit du SSE. Pour ouvrir à d'autres fournisseurs, il faut d'abord isoler un petit adaptateur (`src/lib/ai/<provider>.ts`) exposant `stream(prompt, messages)`, puis choisir l'implémentation via une variable `AI_PROVIDER`.
+  > **Candidats** :
+  > - **Anthropic (Claude)** : `https://api.anthropic.com/v1/messages`, en-têtes `x-api-key` + `anthropic-version`, stream SSE — le plus proche d'OpenAI en effort.
+  > - **Google Gemini** : `generativelanguage.googleapis.com`, format de messages différent (`contents`/`parts`).
+  > - **Mistral** : API compatible OpenAI, donc quasi gratuit à ajouter (juste l'URL de base et la clé) — bon argument « souveraineté » cohérent avec OVH/Scaleway dans le tableau.
+  > - **Azure OpenAI** : même format qu'OpenAI mais URL par déploiement + en-tête `api-key`.
+  > - **Ollama / LM Studio (local)** : `http://localhost:11434/api/chat`, aucune clé, utile pour développer sans coût ni fuite de données.
+  > - **OpenRouter** : un seul point d'entrée compatible OpenAI pour des dizaines de modèles — la solution la plus rentable si l'objectif est « beaucoup de modèles » plutôt que « une intégration native par éditeur ».
+  > **Variables à prévoir** : `AI_PROVIDER`, `AI_MODEL`, `AI_BASE_URL` (pour les APIs compatibles OpenAI et le local), et la clé propre à chaque fournisseur. Toutes **sans** préfixe `NEXT_PUBLIC_`.
+  > **Attention** : le chat est désactivé par défaut (`ENABLE_CHAT = false`) et la route n'a ni quota ni limite de débit. Avant d'ouvrir ça en production, prévoir un rate limit, sinon la clé API est utilisable par n'importe quel visiteur.
+
 - [ ] Écrire les bonnes pratiques du projet sous forme de *skills* Claude Code (`.claude/skills/`).
   > **Note** : aujourd'hui les conventions sont dans `CLAUDE.md` (chargé à chaque session) et dans `docs/contributing/`. Une skill est plus adaptée pour ce qui est *procédural* et pas nécessaire à chaque échange : elle n'est chargée que lorsque la tâche correspond, ce qui garde `CLAUDE.md` court.
   > **Candidats** :

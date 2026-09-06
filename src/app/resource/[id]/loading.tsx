@@ -1,5 +1,5 @@
-import Sidebar from '@/components/sidebar';
+import SidebarSkeleton from '@/components/sidebar-skeleton';
 
 export default function Loading() {
-  return <Sidebar activeElement={null} />;
+  return <SidebarSkeleton />;
 }

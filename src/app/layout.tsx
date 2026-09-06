@@ -7,8 +7,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
-import Head from 'next/head';
 import TableWrapper from '@/components/table-wrapper';
+import NavigationProgress from '@/components/navigation-progress';
 
 declare global {
   interface Window {
@@ -19,10 +19,28 @@ declare global {
 
 const inter = Inter({ subsets: ['latin'] });
 
+const description =
+  'An essential resource for cloud developers, engineers, architects, and consultants seeking to understand Azure services. It provides links to Microsoft Learn documentation, examples of infrastructure as code using Terraform, Bicep, and ARM templates, as well as direct links to the Azure Portal for managing and deploying new resources.';
+
+const previewImage =
+  'https://azure-periodic-table.onwardplatforms.com/periodic-table.png';
+
+// Declared through the Metadata API: `next/head` is not supported in the app
+// directory and logs a warning at runtime.
 export const metadata: Metadata = {
   title: 'The Azure Periodic Table',
-  description:
-    'An essential resource for cloud developers, engineers, architects, and consultants seeking to understand Azure services. It provides links to Microsoft Learn documentation, examples of infrastructure as code using Terraform, Bicep, and ARM templates, as well as direct links to the Azure Portal for managing and deploying new resources.',
+  description,
+  openGraph: {
+    title: 'Azure Periodic Table',
+    description,
+    images: [{ url: previewImage, alt: 'The Azure Periodic Table' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Azure Periodic Table',
+    description,
+    images: [{ url: previewImage, alt: 'The Azure Periodic Table' }],
+  },
 };
 
 export default function RootLayout({
@@ -32,20 +50,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang={DEFAULT_LANGUAGE} style={{ width: '100%' }}>
-      <Head>
-        <title>Azure Periodic Table</title>
-        <meta property="og:title" content="Azure Periodic Table" key="title" />
-        <meta
-          property="og:image"
-          content="https://azure-periodic-table.onwardplatforms.com/periodic-table.png"
-        />
-        <meta property="og:image:alt" content="The Azure Periodic Table" />
-        <meta
-          property="twitter:image"
-          content="https://azure-periodic-table.onwardplatforms.com/periodic-table.png"
-        />
-        <meta property="twitter:image:alt" content="The Azure Periodic Table" />
-      </Head>
       <Script
         async
         strategy="afterInteractive"
@@ -63,6 +67,7 @@ export default function RootLayout({
       <body className={inter.className} style={{ width: '100%' }}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LanguageProvider>
+            <NavigationProgress />
             <CloudProviderProvider>
               <TableWrapper>
                 <>{children}</>

@@ -19,6 +19,7 @@ import { Label } from '@/components/ui/label';
 import useMobile from '@/custom-hooks/use-mobile';
 import { useRouter, usePathname } from 'next/navigation';
 import { useTranslation } from '@/i18n/LanguageContext';
+import { NAVIGATION_START_EVENT } from '@/components/navigation-progress';
 import { logger } from '@/lib/logger';
 
 const providerData = {
@@ -80,6 +81,7 @@ export default function TableWrapper({ children }: { children: JSX.Element }) {
             'search',
             `Single match for "${textSearch}", opening ${filteredElements[0].id}`
           );
+          window.dispatchEvent(new Event(NAVIGATION_START_EVENT));
           navigate.push(`/resource/${filteredElements[0].id}`);
         }
       }
