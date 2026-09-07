@@ -6,35 +6,44 @@ on:
       - main
     paths:
       - 'docker/**'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    # A fork without the Docker Hub secrets skips the push instead of failing.
-    env:
-      HAS_DOCKER_CREDENTIALS: ${{ secrets.DOCKER_USERNAME != '' && secrets.DOCKER_PASSWORD != '' }}
-
     steps:
-    - name: Check Out Repository
-      uses: actions/checkout@v4
+      - name: Check Out Repository
+        uses: actions/checkout@v4
 
-    - name: Report missing credentials
-      if: env.HAS_DOCKER_CREDENTIALS != 'true'
-      run: echo "DOCKER_USERNAME/DOCKER_PASSWORD are not set: skipping the image build." >> "$GITHUB_STEP_SUMMARY"
+      # The `secrets` context cannot be used in a job-level `env` nor directly
+      # in a step `if`, so it is turned into an output here: a fork without the
+      # Docker Hub credentials skips the push instead of failing the run.
+      - name: Check the Docker Hub credentials
+        id: credentials
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          if [ -n "$DOCKER_USERNAME" ] && [ -n "$DOCKER_PASSWORD" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "DOCKER_USERNAME/DOCKER_PASSWORD are not set: skipping the image build." >> "$GITHUB_STEP_SUMMARY"
+          fi
 
-    - name: Login to Docker Hub
-      if: env.HAS_DOCKER_CREDENTIALS == 'true'
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Login to Docker Hub
+        if: steps.credentials.outputs.available == 'true'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and Push Docker Image
-      if: env.HAS_DOCKER_CREDENTIALS == 'true'
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: docker/Dockerfile
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/azure-periodic-table-dockerversion:latest
+      - name: Build and Push Docker Image
+        if: steps.credentials.outputs.available == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/azure-periodic-table-dockerversion:latest
