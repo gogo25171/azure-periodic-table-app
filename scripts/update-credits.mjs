@@ -11,7 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { ROOT } from './lib/load-ts.mjs';
+import { ROOT } from './lib/paths.mjs';
 
 const START = '<!-- CONTRIBUTORS:START -->';
 const END = '<!-- CONTRIBUTORS:END -->';
@@ -50,9 +50,9 @@ const contributors = Array.from(byName.values()).sort(
   (a, b) => b.commits - a.commits || a.name.localeCompare(b.name)
 );
 
-const list = contributors
-  .map((entry) => `- **${entry.name}** — ${entry.commits} commit(s)`)
-  .join('\n');
+// Ordered by number of commits, but the count itself is not written: it would
+// change on every commit and make the CI check fail on unrelated changes.
+const list = contributors.map((entry) => `- **${entry.name}**`).join('\n');
 
 const block = `${START}\n\n${list}\n\n${END}`;
 

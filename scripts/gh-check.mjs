@@ -12,7 +12,7 @@
  */
 
 import { spawnSync } from 'node:child_process';
-import { ROOT } from './lib/load-ts.mjs';
+import { ROOT } from './lib/paths.mjs';
 
 const args = process.argv.slice(2);
 const flag = (name) => args.includes(`--${name}`);
@@ -46,6 +46,16 @@ function hasCommand(command) {
   return probe.status === 0;
 }
 
+/**
+ * `gh` picks its own default repository, which is the upstream one on a fork.
+ * The runs we care about are the ones of `origin`, so it is passed explicitly.
+ */
+function originRepo() {
+  const url = capture('git', ['remote', 'get-url', 'origin']).stdout;
+  const match = url.match(/github\.com[:/]([^/]+\/[^/]+?)(?:\.git)?$/);
+  return match ? match[1] : null;
+}
+
 let failures = 0;
 
 if (!onlyRemote) {
@@ -56,7 +66,7 @@ if (!onlyRemote) {
   // `process.execPath` contains spaces on Windows ("C:\Program Files\..."),
   // which a shell would split: these two run without one.
   failures +=
-    run('Tests', process.execPath, ['--test', 'tests/**/*.test.mjs'], {
+    run('Tests', process.execPath, ['scripts/run-tests.mjs'], {
       shell: false,
     }) === 0
       ? 0
@@ -82,11 +92,13 @@ if (!onlyLocal) {
     );
   } else {
     const branch = capture('git', ['rev-parse', '--abbrev-ref', 'HEAD']).stdout;
-    console.log(`\n▶ GitHub Actions runs for "${branch}"`);
+    const repo = originRepo();
+    console.log(`\n▶ GitHub Actions runs for "${branch}"${repo ? ` on ${repo}` : ''}`);
 
     const runs = capture('gh', [
       'run',
       'list',
+      ...(repo ? ['--repo', repo] : []),
       '--branch',
       branch,
       '--limit',
@@ -122,7 +134,12 @@ if (!onlyLocal) {
       console.log('');
 
       if (flag('watch')) {
-        run('Watching the latest run', 'gh', ['run', 'watch', '--exit-status']);
+        run('Watching the latest run', 'gh', [
+          'run',
+          'watch',
+          ...(repo ? ['--repo', repo] : []),
+          '--exit-status',
+        ]);
       }
     }
   }

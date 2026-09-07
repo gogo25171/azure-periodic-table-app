@@ -11,7 +11,7 @@ yarn build            # next build
 yarn start            # serve the production build
 yarn lint             # next lint && eslint .
 yarn typecheck        # tsc --noEmit
-yarn test             # node --test on tests/**/*.test.mjs (no test framework installed)
+yarn test             # node --test through scripts/run-tests.mjs (no test framework installed)
 yarn validate:data    # provider dataset checks (src/lib/data-audit.ts)
 yarn verify           # lint + typecheck + test + validate:data — what CI runs
 yarn gh:check         # yarn verify, then the GitHub Actions status of the branch (needs gh)
@@ -36,7 +36,7 @@ Data collectors (run from the `python/` directory, which is where their relative
 cd python && pip install -r requirements.txt && python3 terraform-collector.py
 ```
 
-Tests live in `tests/` and run on the built-in Node.js runner (`node --test`) through the TypeScript loader in `scripts/lib/load-ts.mjs` — there is no Jest/Vitest dependency, so add new tests as `tests/*.test.mjs`. CI (`.github/workflows/ci.yml`) runs lint, typecheck, tests, `validate:data`, the build and the credits check on every push.
+Tests live in `tests/` and run on the built-in Node.js runner through `scripts/run-tests.mjs` (which lists the files itself: globs need Node 22, and a bare directory fails on Windows), loading the TypeScript sources with `scripts/lib/load-ts.mjs` — there is no Jest/Vitest dependency, so add new tests as `tests/*.test.mjs`. CI (`.github/workflows/ci.yml`) runs lint, typecheck, tests, `validate:data`, the build and the credits check on every push.
 
 npm is not used at all: there is no `package-lock.json` (git-ignored) and `yarn check:deps` reads `yarn outdated` / `yarn audit`.
 

@@ -4,18 +4,18 @@
 
 Everyone who has committed to this repository, ordered by number of commits.
 The list is generated from the git history with `yarn update:credits` and
-checked by CI, so it never drifts.
+checked by CI, so a new contributor is never forgotten.
 
 <!-- CONTRIBUTORS:START -->
 
-- **Justin O'Connor** — 129 commit(s)
-- **Reilly O'Donnell** — 13 commit(s)
-- **Ashley Arrington** — 10 commit(s)
-- **gogo25171** — 4 commit(s)
-- **Cpotharaju** — 2 commit(s)
-- **Cloud Conduction** — 1 commit(s)
-- **GCLEMENT3il** — 1 commit(s)
-- **Steve Kaschimer** — 1 commit(s)
+- **Justin O'Connor**
+- **Reilly O'Donnell**
+- **Ashley Arrington**
+- **gogo25171**
+- **Cpotharaju**
+- **Cloud Conduction**
+- **GCLEMENT3il**
+- **Steve Kaschimer**
 
 <!-- CONTRIBUTORS:END -->
 

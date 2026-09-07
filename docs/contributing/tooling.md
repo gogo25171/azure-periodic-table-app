@@ -49,10 +49,14 @@ The suite runs on the **built-in Node.js test runner** — no Jest, no Vitest, n
 extra dependency:
 
 ```bash
-yarn test                                   # everything
-node --test tests/i18n.test.mjs             # a single file
-node --test --test-name-pattern="duplicate" # a single test
+yarn test                        # everything
+yarn test i18n                   # only the files whose name matches "i18n"
+node --test tests/i18n.test.mjs  # a single file
 ```
+
+`yarn test` goes through `scripts/run-tests.mjs`, which lists the files itself:
+`node --test "tests/**"` needs the glob support of Node 22 while CI runs Node
+20, and `node --test tests` fails on Windows.
 
 | File | What it protects |
 | --- | --- |
