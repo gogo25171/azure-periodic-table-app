@@ -1,7 +1,6 @@
 import re
 import os
 import requests
-import codecs
 import subprocess
 
 # Constants
@@ -18,17 +17,6 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0'
 }
 
-def decode_escapes(s):
-    """
-    Decodes escape sequences like \n and \", handling errors gracefully.
-    """
-    try:
-        return codecs.decode(s, 'unicode_escape')
-    except Exception as e:
-        print(f"Error decoding escape sequences: {e}")
-        return s  # Return the original string if decoding fails
-
-
 def substitute_values(content, slug, substitutions):
     """
     Substitute attributes with specified values.
@@ -43,24 +31,62 @@ def substitute_values(content, slug, substitutions):
         content = pattern.sub(replacement, content)
     return content
 
+HEREDOC_PATTERN = re.compile(r'<<-?\s*([A-Za-z_]\w*)\s*$')
+
+def find_block_end(lines, start):
+    """
+    Index of the `}` in column 0 closing the block opened on `lines[start]`.
+    Heredoc bodies are skipped, so a JSON document closing with `}` inside
+    `<<EOF ... EOF` does not end the block early.
+    """
+    heredoc_marker = None
+    for i in range(start + 1, len(lines)):
+        line = lines[i]
+        if heredoc_marker:
+            if line.strip() == heredoc_marker:
+                heredoc_marker = None
+            continue
+        heredoc = HEREDOC_PATTERN.search(line)
+        if heredoc:
+            heredoc_marker = heredoc.group(1)
+        elif line.rstrip() == '}':
+            return i
+    return len(lines) - 1
+
+def extract_blocks(content, header_pattern):
+    """
+    Return the top-level blocks whose first line matches `header_pattern`.
+    """
+    header = re.compile(header_pattern)
+    lines = content.split('\n')
+    blocks = []
+    i = 0
+    while i < len(lines):
+        if header.match(lines[i]):
+            end = find_block_end(lines, i)
+            blocks.append('\n'.join(lines[i:end + 1]))
+            i = end
+        i += 1
+    return blocks
+
 def extract_resources_and_data(content, resource_type):
     """
     Extract the block for a specific resource type from the Terraform content and
     retain blocks containing "data" or "locals" references.
     """
-    locals_pattern = rf'^locals\s*{{[\s\S]*?^}}'
-    data_pattern = rf'^data\s+\".*?\"\s+\".*?\"\s*{{[\s\S]*?^}}'
-    resource_pattern = rf'^resource\s+"{resource_type}"\s+".*?"\s*{{[\s\S]*?^}}'
+    locals_pattern = r'^locals\s*{'
+    data_pattern = r'^data\s+".*?"\s+".*?"\s*{'
+    resource_pattern = rf'^resource\s+"{resource_type}"\s+".*?"\s*{{'
 
-    resource_blocks = [match.group(0) for match in re.finditer(resource_pattern, content, re.MULTILINE)]
+    resource_blocks = extract_blocks(content, resource_pattern)
     data_blocks = set()
     locals_blocks = set()
 
     for resource_block in resource_blocks:
         if 'data.' in resource_block:
-            data_blocks.update([match.group(0) for match in re.finditer(data_pattern, content, re.MULTILINE)])
+            data_blocks.update(extract_blocks(content, data_pattern))
         if 'local.' in resource_block:
-            locals_blocks.update([match.group(0) for match in re.finditer(locals_pattern, content, re.MULTILINE)])
+            locals_blocks.update(extract_blocks(content, locals_pattern))
 
     combined_blocks = list(data_blocks) + list(locals_blocks) + resource_blocks
     return '\n\n'.join(combined_blocks)
@@ -136,9 +162,21 @@ def format_terraform_code(code: str, indentation='  '):
     lines = code.split('\n')
     indent_level = 0
     formatted_lines = []
+    heredoc_marker = None
 
     for line in lines:
+        # Heredoc bodies are kept verbatim: re-indenting them would move the
+        # closing marker off column 0 and leave the string unterminated.
+        if heredoc_marker:
+            formatted_lines.append(line)
+            if line.strip() == heredoc_marker:
+                heredoc_marker = None
+            continue
+
         stripped_line = line.strip()
+        heredoc = HEREDOC_PATTERN.search(stripped_line)
+        if heredoc:
+            heredoc_marker = heredoc.group(1)
         if stripped_line.startswith('}'):
             indent_level -= 1
         formatted_line = (indentation * indent_level) + stripped_line
@@ -212,8 +250,9 @@ for cloud in cloud_platforms:
                     # Append tags if supported
                     content = append_tags_if_supported(markdown_content, content)
 
-                    # Decode escape sequences
-                    content = decode_escapes(content)
+                    # The raw Markdown is already plain HCL: decoding escape
+                    # sequences here turned "\\d" into an invalid "\d" and
+                    # unquoted the \" of embedded JSON, breaking the snippet.
 
                     substitutions = {
                         "name": f'"{slug}${{local.naming_suffix}}"',
