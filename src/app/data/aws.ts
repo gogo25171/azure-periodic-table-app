@@ -1780,4 +1780,328 @@ resource "aws_kms_alias" "main" {
       },
     ],
   },
+  {
+    items: [
+      {
+        id: 'aws-lightsail-instance',
+        name: 'Lightsail Instance',
+        slug: 'ls-',
+        description:
+          'Virtual private server bundled with storage, data transfer and a static IP at a predictable monthly price.',
+        length: '2-255',
+        category: Categories.COMPUTEANDWEB,
+        learnUrl: 'https://docs.aws.amazon.com/lightsail/',
+        terraformUrl:
+          'https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lightsail_instance',
+        restrictions:
+          'Letters, numbers, periods, hyphens and underscores. Must begin with a letter or a number.',
+        resource: 'aws_lightsail_instance',
+        entity: 'instances',
+        scope: 'region',
+        icon: '',
+        terraformCode: `resource "aws_lightsail_instance" "main" {
+  name              = "ls-main"
+  availability_zone = "us-east-1a"
+  blueprint_id      = "amazon_linux_2023"
+  bundle_id         = "nano_3_0"
+}`,
+        pricingReferenceUrl: 'https://aws.amazon.com/lightsail/pricing/',
+        portalUrl: 'https://lightsail.aws.amazon.com/',
+      },
+      {
+        id: 'aws-imagebuilder-image-recipe',
+        name: 'Image Builder Recipe',
+        slug: 'recipe-',
+        description:
+          'Versioned definition of a parent image and the components applied to build hardened, up-to-date machine images.',
+        length: '1-128',
+        category: Categories.COMPUTEANDWEB,
+        learnUrl: 'https://docs.aws.amazon.com/imagebuilder/',
+        terraformUrl:
+          'https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/imagebuilder_image_recipe',
+        restrictions: 'Letters, numbers, spaces, hyphens and underscores.',
+        resource: 'aws_imagebuilder_image_recipe',
+        entity: 'imageRecipes',
+        scope: 'region',
+        icon: '',
+        terraformCode: `resource "aws_imagebuilder_image_recipe" "main" {
+  name         = "recipe-main"
+  parent_image = "arn:aws:imagebuilder:us-east-1:aws:image/amazon-linux-2023-x86/x.x.x"
+  version      = "1.0.0"
+
+  component {
+    component_arn = "arn:aws:imagebuilder:us-east-1:aws:component/update-linux/x.x.x"
+  }
+}`,
+        pricingReferenceUrl: 'https://aws.amazon.com/image-builder/pricing/',
+        portalUrl: 'https://console.aws.amazon.com/imagebuilder/',
+      },
+      {
+        id: 'aws-serverless-application-stack',
+        name: 'Serverless Application Stack',
+        slug: 'sar-',
+        description:
+          'Deployment of a published Serverless Application Repository application as a CloudFormation stack.',
+        length: '1-128',
+        category: Categories.COMPUTEANDWEB,
+        learnUrl: 'https://docs.aws.amazon.com/serverlessrepo/',
+        terraformUrl:
+          'https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/serverlessapplicationrepository_cloudformation_stack',
+        restrictions: 'Letters, numbers and hyphens. Must begin with a letter.',
+        resource: 'aws_serverlessapplicationrepository_cloudformation_stack',
+        entity: 'stacks',
+        scope: 'region',
+        icon: '',
+        terraformCode: `resource "aws_serverlessapplicationrepository_cloudformation_stack" "main" {
+  name           = "sar-main"
+  application_id = "arn:aws:serverlessrepo:us-east-1:297356227824:applications/SecretsManagerRDSPostgreSQLRotationSingleUser"
+  capabilities   = ["CAPABILITY_IAM", "CAPABILITY_RESOURCE_POLICY"]
+
+  parameters = {
+    functionName = "lambda-postgres-rotator"
+    endpoint     = "secretsmanager.us-east-1.amazonaws.com"
+  }
+}`,
+        pricingReferenceUrl: 'https://aws.amazon.com/serverless/serverlessrepo/',
+        portalUrl: 'https://console.aws.amazon.com/serverlessrepo/',
+      },
+      {
+        id: 'aws-storage-gateway',
+        name: 'Storage Gateway',
+        slug: 'sgw-',
+        description:
+          'Hybrid storage appliance giving on-premises applications file, volume or tape access backed by cloud storage.',
+        length: '2-255',
+        category: Categories.STORAGE,
+        learnUrl: 'https://docs.aws.amazon.com/storagegateway/',
+        terraformUrl:
+          'https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/storagegateway_gateway',
+        restrictions: 'Letters, numbers, spaces, hyphens, underscores and periods.',
+        resource: 'aws_storagegateway_gateway',
+        entity: 'gateways',
+        scope: 'region',
+        icon: '',
+        terraformCode: `resource "aws_storagegateway_gateway" "main" {
+  gateway_ip_address = "10.0.0.10"
+  gateway_name       = "sgw-main"
+  gateway_timezone   = "GMT"
+  gateway_type       = "FILE_S3"
+}`,
+        pricingReferenceUrl: 'https://aws.amazon.com/storagegateway/pricing/',
+        portalUrl: 'https://console.aws.amazon.com/storagegateway/',
+      },
+      {
+        id: 'aws-neptune-cluster',
+        name: 'Neptune Cluster',
+        slug: 'neptune-',
+        description:
+          'Managed graph database supporting property graph (Gremlin, openCypher) and RDF (SPARQL) queries.',
+        length: '1-63',
+        category: Categories.DATABASES,
+        learnUrl: 'https://docs.aws.amazon.com/neptune/',
+        terraformUrl:
+          'https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/neptune_cluster',
+        restrictions:
+          'Lowercase letters, numbers and hyphens. Must begin with a letter, cannot end with a hyphen or contain two consecutive hyphens.',
+        resource: 'aws_neptune_cluster',
+        entity: 'dbClusters',
+        scope: 'region',
+        icon: '',
+        terraformCode: `resource "aws_neptune_cluster" "main" {
+  cluster_identifier                  = "neptune-main"
+  engine                              = "neptune"
+  backup_retention_period             = 7
+  iam_database_authentication_enabled = true
+  skip_final_snapshot                 = true
+}`,
+        pricingReferenceUrl: 'https://aws.amazon.com/neptune/pricing/',
+        portalUrl: 'https://console.aws.amazon.com/neptune/',
+      },
+      {
+        id: 'aws-memorydb-cluster',
+        name: 'MemoryDB Cluster',
+        slug: 'memorydb-',
+        description:
+          'Durable in-memory database compatible with Valkey and Redis OSS, with a Multi-AZ transaction log.',
+        length: '1-40',
+        category: Categories.DATABASES,
+        learnUrl: 'https://docs.aws.amazon.com/memorydb/',
+        terraformUrl:
+          'https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/memorydb_cluster',
+        restrictions:
+          'Lowercase letters, numbers and hyphens. Must begin with a letter, cannot end with a hyphen or contain two consecutive hyphens.',
+        resource: 'aws_memorydb_cluster',
+        entity: 'clusters',
+        scope: 'region',
+        icon: '',
+        terraformCode: `resource "aws_memorydb_cluster" "main" {
+  name                   = "memorydb-main"
+  acl_name               = "open-access"
+  engine                 = "valkey"
+  node_type              = "db.t4g.small"
+  num_shards             = 1
+  num_replicas_per_shard = 1
+}`,
+        pricingReferenceUrl: 'https://aws.amazon.com/memorydb/pricing/',
+        portalUrl: 'https://console.aws.amazon.com/memorydb/',
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        id: 'aws-dx-connection',
+        name: 'Direct Connect Connection',
+        slug: 'dx-',
+        description:
+          'Dedicated private network link between an on-premises network and an AWS Direct Connect location.',
+        length: '1-255',
+        category: Categories.NETWORKING,
+        learnUrl: 'https://docs.aws.amazon.com/directconnect/',
+        terraformUrl:
+          'https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dx_connection',
+        restrictions:
+          'Free-form name; keep it to letters, numbers and hyphens for readability.',
+        resource: 'aws_dx_connection',
+        entity: 'connections',
+        scope: 'region',
+        icon: '',
+        terraformCode: `resource "aws_dx_connection" "main" {
+  name      = "dx-main"
+  bandwidth = "1Gbps"
+  location  = "EqDC2"
+}`,
+        pricingReferenceUrl: 'https://aws.amazon.com/directconnect/pricing/',
+        portalUrl: 'https://console.aws.amazon.com/directconnect/v2/home',
+      },
+      {
+        id: 'aws-global-accelerator',
+        name: 'Global Accelerator',
+        slug: 'ga-',
+        description:
+          'Static anycast IP addresses that route user traffic over the AWS global network to the closest healthy endpoint.',
+        length: '1-64',
+        category: Categories.NETWORKING,
+        learnUrl: 'https://docs.aws.amazon.com/global-accelerator/',
+        terraformUrl:
+          'https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/globalaccelerator_accelerator',
+        restrictions:
+          'Letters, numbers, periods and hyphens. Cannot begin or end with a hyphen or a period.',
+        resource: 'aws_globalaccelerator_accelerator',
+        entity: 'accelerators',
+        scope: 'global',
+        icon: '',
+        terraformCode: `resource "aws_globalaccelerator_accelerator" "main" {
+  name            = "ga-main"
+  ip_address_type = "IPV4"
+  enabled         = true
+}`,
+        pricingReferenceUrl: 'https://aws.amazon.com/global-accelerator/pricing/',
+        portalUrl: 'https://console.aws.amazon.com/globalaccelerator/',
+      },
+      {
+        id: 'aws-cloud-map-namespace',
+        name: 'Cloud Map Namespace',
+        slug: 'ns-',
+        description:
+          'Service discovery registry where applications register their instances and look up healthy endpoints by name.',
+        length: '1-1024',
+        category: Categories.NETWORKING,
+        learnUrl: 'https://docs.aws.amazon.com/cloud-map/',
+        terraformUrl:
+          'https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/service_discovery_http_namespace',
+        restrictions: 'Letters, numbers, hyphens, underscores and periods.',
+        resource: 'aws_service_discovery_http_namespace',
+        entity: 'namespaces',
+        scope: 'region',
+        icon: '',
+        terraformCode: `resource "aws_service_discovery_http_namespace" "main" {
+  name        = "ns-main"
+  description = "Service discovery namespace"
+}`,
+        pricingReferenceUrl: 'https://aws.amazon.com/cloud-map/pricing/',
+        portalUrl: 'https://console.aws.amazon.com/cloudmap/',
+      },
+      {
+        id: 'aws-rekognition-collection',
+        name: 'Rekognition Collection',
+        slug: 'rek-',
+        description:
+          'Container for indexed faces used by Rekognition to search and match faces in images and videos.',
+        length: '1-255',
+        category: Categories.AIANDML,
+        learnUrl: 'https://docs.aws.amazon.com/rekognition/',
+        terraformUrl:
+          'https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rekognition_collection',
+        restrictions: 'Letters, numbers, periods, hyphens and underscores.',
+        resource: 'aws_rekognition_collection',
+        entity: 'collections',
+        scope: 'region',
+        icon: '',
+        terraformCode: `resource "aws_rekognition_collection" "main" {
+  collection_id = "rek-main"
+}`,
+        pricingReferenceUrl: 'https://aws.amazon.com/rekognition/pricing/',
+        portalUrl: 'https://console.aws.amazon.com/rekognition/',
+      },
+      {
+        id: 'aws-comprehend-document-classifier',
+        name: 'Comprehend Classifier',
+        slug: 'cmp-',
+        description:
+          'Custom natural language model that sorts documents into the categories it was trained on.',
+        length: '1-63',
+        category: Categories.AIANDML,
+        learnUrl: 'https://docs.aws.amazon.com/comprehend/',
+        terraformUrl:
+          'https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/comprehend_document_classifier',
+        restrictions:
+          'Letters, numbers and hyphens. Must begin and end with a letter or a number.',
+        resource: 'aws_comprehend_document_classifier',
+        entity: 'documentClassifiers',
+        scope: 'region',
+        icon: '',
+        terraformCode: `resource "aws_comprehend_document_classifier" "main" {
+  name                 = "cmp-main"
+  data_access_role_arn = aws_iam_role.comprehend.arn
+  language_code        = "en"
+
+  input_data_config {
+    s3_uri = "s3://s3-comprehend-training/documents.csv"
+  }
+}`,
+        pricingReferenceUrl: 'https://aws.amazon.com/comprehend/pricing/',
+        portalUrl: 'https://console.aws.amazon.com/comprehend/',
+      },
+      {
+        id: 'aws-lex-bot',
+        name: 'Lex Bot',
+        slug: 'bot-',
+        description:
+          'Conversational interface understanding voice and text, with intents, slots and fulfilment hooks.',
+        length: '1-100',
+        category: Categories.AIANDML,
+        learnUrl: 'https://docs.aws.amazon.com/lexv2/',
+        terraformUrl:
+          'https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lexv2models_bot',
+        restrictions:
+          'Letters, numbers, hyphens and underscores. Must begin with a letter or a number.',
+        resource: 'aws_lexv2models_bot',
+        entity: 'bots',
+        scope: 'region',
+        icon: '',
+        terraformCode: `resource "aws_lexv2models_bot" "main" {
+  name                        = "bot-main"
+  role_arn                    = aws_iam_role.lex.arn
+  idle_session_ttl_in_seconds = 300
+
+  data_privacy {
+    child_directed = false
+  }
+}`,
+        pricingReferenceUrl: 'https://aws.amazon.com/lex/pricing/',
+        portalUrl: 'https://console.aws.amazon.com/lexv2/',
+      },
+    ],
+  },
 ];
