@@ -9,7 +9,7 @@ yarn install          # required first; yarn only (package-lock.json is git-igno
 yarn dev              # dev server at http://localhost:3000
 yarn build            # next build
 yarn start            # serve the production build
-yarn lint             # next lint && eslint .
+yarn lint             # eslint . (`next lint` is deprecated in Next 15.5)
 yarn typecheck        # tsc --noEmit
 yarn test             # node --test through scripts/run-tests.mjs (no test framework installed)
 yarn validate:data    # provider dataset checks (src/lib/data-audit.ts)
@@ -42,7 +42,7 @@ npm is not used at all: there is no `package-lock.json` (git-ignored) and `yarn 
 
 ## Architecture
 
-Next.js 14 App Router + Tailwind + shadcn/ui (`src/components/ui/`, configured via `components.json`). Path alias `@/*` → `./src/*`.
+Next.js 15 App Router + React 19 + Tailwind + shadcn/ui (`src/components/ui/`, configured via `components.json`). Path alias `@/*` → `./src/*`.
 
 ### The page is rendered by the layout, not by `page.tsx`
 

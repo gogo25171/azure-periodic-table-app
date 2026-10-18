@@ -76,7 +76,7 @@
   > - `docs-and-i18n` : source unique en anglais, `*.fr.md` pour traduire, `mkdocs build --strict`, ne pas remettre de pied de page « Dernière mise à jour ».
   > **Attention** : une skill qui répète `CLAUDE.md` est du bruit. Le bon découpage est : `CLAUDE.md` = ce qui est vrai tout le temps (architecture, conventions), skills = les procédures pas-à-pas déclenchées par une tâche précise.
 
-- [ ] Planifier la montée de version des dépendances (voir `yarn check:deps`) : Next 14 → 16 (palier 13 → 14.2.35 fait), React 18 → 19, Tailwind 3 → 4, ESLint 8 → 10. À faire par paliers (Next 15 + React 19 d'abord, Tailwind ensuite), pas en une fois. Les 2 vulnérabilités critiques restantes viennent de `next` (corrigées à partir de 15.5.24).
+- [ ] Planifier la montée de version des dépendances (voir `yarn check:deps`) : Next 15 → 16, Tailwind 3 → 4, ESLint 8 → 9 (flat config). Paliers faits : Next 13 → 14.2.35 → 15.5.28 et React 18 → 19 (plus aucune vulnérabilité critique). Les 5 hautes restantes viennent de `braces`, sans correctif, et ne servent qu'au build et au lint (Tailwind, ESLint).
 
 - [ ] Vérifier si `jspdf`, `@tiptap/*`, `axios`, `shiki`, `react-markdown` sont encore utilisés : plusieurs semblent être des reliquats. Les retirer supprimerait une bonne partie des alertes de sécurité.
 

@@ -2,7 +2,7 @@
 
 | Tool | Version | Why |
 | --- | --- | --- |
-| [Node.js](https://nodejs.org/) | 18.17 or higher (22.x recommended) | Required by Next.js 14. |
+| [Node.js](https://nodejs.org/) | 18.18 or higher (22.x recommended) | Required by Next.js 15. |
 | [Yarn](https://classic.yarnpkg.com/en/docs/install) | 1.22 or higher | `yarn.lock` is the committed lockfile. |
 | [Git](https://git-scm.com/) | any recent version | Clone the repository and run the pre-push hook. |
 | [Python](https://www.python.org/) | 3.9 or higher | Optional: documentation and data collectors. |

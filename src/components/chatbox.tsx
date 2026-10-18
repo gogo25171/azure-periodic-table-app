@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import ReactMarkdown, { Components } from 'react-markdown';
+import ReactMarkdown, { type Components, type ExtraProps } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Icons } from '@/components/ui/icons';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { ReactMarkdownProps } from 'react-markdown/lib/complex-types';
-import { CodeComponent, LiProps } from 'react-markdown/lib/ast-to-react';
-import { AnchorHTMLAttributes } from 'react';
+import type { ComponentPropsWithoutRef } from 'react';
 import { URLBox } from './ui/url-box';
 
 type ChatBoxProps = {
@@ -126,14 +124,16 @@ export const ChatBox: React.FC<ChatBoxProps> = ({ prompt }) => {
   };
 
   // Custom Code Block Component
-  const CodeBlock: CodeComponent = ({
+  const CodeBlock = ({
     node,
-    inline,
     className,
     children,
     ...props
-  }) => {
+  }: ComponentPropsWithoutRef<'code'> & ExtraProps) => {
     const [isCopied, setIsCopied] = useState(false);
+    // react-markdown 9+ no longer flags inline code: a fenced block carries a
+    // language class or spans several lines.
+    const inline = !className && !String(children).includes('\n');
 
     const handleCopy = () => {
       navigator.clipboard.writeText(String(children)).then(() => {
@@ -175,14 +175,19 @@ export const ChatBox: React.FC<ChatBoxProps> = ({ prompt }) => {
   };
 
   // Custom Link Component
-  const CustomLink: React.FC<
-    AnchorHTMLAttributes<HTMLAnchorElement> & ReactMarkdownProps
-  > = ({ href, children, ...props }) => (
+  const CustomLink = ({
+    href,
+    children,
+  }: ComponentPropsWithoutRef<'a'> & ExtraProps) => (
     <URLBox href={href || '#'} text={String(children)} />
   );
 
   // Custom List Item Component
-  const CustomListItem: React.FC<LiProps> = ({ children, ...props }) => (
+  const CustomListItem = ({
+    node,
+    children,
+    ...props
+  }: ComponentPropsWithoutRef<'li'> & ExtraProps) => (
     <li className="list-disc list-outside ml-5" {...props}>
       <span>{children}</span>
     </li>
@@ -190,12 +195,12 @@ export const ChatBox: React.FC<ChatBoxProps> = ({ prompt }) => {
 
   // Components Object
   const components: Components = {
-    ul: ({ children, ...props }) => (
+    ul: ({ node, children, ...props }) => (
       <ul className="list-disc list-inside ml-5" {...props}>
         {children}
       </ul>
     ),
-    ol: ({ children, ...props }) => (
+    ol: ({ node, children, ...props }) => (
       <ol className="list-decimal list-inside ml-5" {...props}>
         {children}
       </ol>

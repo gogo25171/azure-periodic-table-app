@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, type ReactNode } from 'react';
 import { useCloudProvider } from '@/contexts/CloudProviderContext';
 import * as azureData from '../app/data/azure';
 import * as awsData from '../app/data/aws';
@@ -38,7 +38,7 @@ const providerConfig = {
   scaleway: { name: 'Scaleway', icon: Icons.Scaleway },
 };
 
-export default function TableWrapper({ children }: { children: JSX.Element }) {
+export default function TableWrapper({ children }: { children: ReactNode }) {
   const { provider } = useCloudProvider();
   const data = useMemo(() => providerData[provider], [provider]);
   const config = useMemo(() => providerConfig[provider], [provider]);

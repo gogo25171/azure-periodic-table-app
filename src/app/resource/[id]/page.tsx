@@ -15,8 +15,9 @@ const providers = [
   { id: 'scaleway', data: scalewayData },
 ];
 
-export default function Page({ params }: { params: { id: string } }) {
-  const paramsId = params.id;
+// Next 15 passes the route params as a promise.
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id: paramsId } = await params;
 
   // Find which cloud provider this resource belongs to
   let cloud = '';
