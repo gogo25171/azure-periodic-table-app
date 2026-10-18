@@ -19,7 +19,8 @@ const END = '<!-- CONTRIBUTORS:END -->';
 /** Bots and duplicated identities that should not appear in the credits. */
 const BOTS = [/dependabot/i, /renovate/i, /github action/i, /\[bot\]/i];
 
-const result = spawnSync('git', ['shortlog', '-sne', 'HEAD'], {
+// Oldest commit first: authors are listed in the order they first contributed.
+const result = spawnSync('git', ['log', '--reverse', '--format=%aN%x09%aE', 'HEAD'], {
   cwd: ROOT,
   encoding: 'utf8',
   shell: process.platform === 'win32',
@@ -30,34 +31,28 @@ if (result.status !== 0) {
   process.exit(1);
 }
 
-const byName = new Map();
+// Several machines mean several identities for the same person: merge on name.
+const names = new Set();
 
 for (const line of result.stdout.split('\n')) {
-  const match = line.trim().match(/^(\d+)\t(.+?) <(.+?)>$/);
-  if (!match) continue;
-
-  const [, countRaw, name, email] = match;
+  const [name, email] = line.trim().split('\t');
+  if (!name || !email) continue;
   if (BOTS.some((pattern) => pattern.test(name) || pattern.test(email))) continue;
-
-  // Several machines mean several identities for the same person: merge on name.
-  const entry = byName.get(name) ?? { name, commits: 0, emails: new Set() };
-  entry.commits += Number(countRaw);
-  entry.emails.add(email);
-  byName.set(name, entry);
+  names.add(name);
 }
 
-const contributors = Array.from(byName.values()).sort(
-  (a, b) => b.commits - a.commits || a.name.localeCompare(b.name)
-);
-
-// Ordered by number of commits, but the count itself is not written: it would
-// change on every commit and make the CI check fail on unrelated changes.
-const list = contributors.map((entry) => `- **${entry.name}**`).join('\n');
-
-const block = `${START}\n\n${list}\n\n${END}`;
+// Ordered by first contribution rather than by number of commits: a commit
+// count ranking reshuffles whenever someone overtakes someone else, which made
+// the CI check fail on unrelated changes. Now a new contributor is appended.
+const list = Array.from(names, (name) => `- **${name}**`).join('\n');
 
 const creditsPath = path.join(ROOT, 'docs', 'about', 'credits.md');
 const source = fs.readFileSync(creditsPath, 'utf8');
+
+// Keep the line endings of the checkout (CRLF on Windows with core.autocrlf),
+// otherwise --check reports a stale list on every Windows machine.
+const eol = source.includes('\r\n') ? '\r\n' : '\n';
+const block = `${START}${eol}${eol}${list.replace(/\n/g, eol)}${eol}${eol}${END}`;
 
 if (!source.includes(START) || !source.includes(END)) {
   console.error(
@@ -81,4 +76,4 @@ if (process.argv.includes('--check')) {
 }
 
 fs.writeFileSync(creditsPath, updated);
-console.log(`${contributors.length} contributor(s) written to docs/about/credits.md`);
+console.log(`${names.size} contributor(s) written to docs/about/credits.md`);

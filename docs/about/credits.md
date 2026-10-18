@@ -2,7 +2,7 @@
 
 ## Contributors
 
-Everyone who has committed to this repository, ordered by number of commits.
+Everyone who has committed to this repository, in order of first contribution.
 The list is generated from the git history with `yarn update:credits` and
 checked by CI, so a new contributor is never forgotten.
 
@@ -10,12 +10,12 @@ checked by CI, so a new contributor is never forgotten.
 
 - **Justin O'Connor**
 - **Reilly O'Donnell**
-- **Ashley Arrington**
-- **gogo25171**
 - **Cpotharaju**
+- **Ashley Arrington**
 - **Cloud Conduction**
-- **GCLEMENT3il**
 - **Steve Kaschimer**
+- **GCLEMENT3il**
+- **gogo25171**
 
 <!-- CONTRIBUTORS:END -->
 
