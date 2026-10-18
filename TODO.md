@@ -2,6 +2,8 @@
 
 ## En cours / à faire
 
+- [ ] Ajouter une section prix qui viens du projet "terracost" (que je modifie) ou autres
+
 - [ ] Corriger que quand on télécharge l'image, les icônes par défaut (quand il ne trouve pas l'icône inscrit dans le JSON de la ressource) ne s'affichent pas toujours.
   > **Note (partiellement traité)** : deux corrections ont été faites : (1) les cellules sans icône affichent désormais `default-icon.svg` au lieu de rien (`src/components/column.tsx`), (2) `download.tsx` attend que **toutes** les images soient chargées avant de lancer html2canvas. S'il reste des trous dans l'export, la cause suivante est `next/image` qui sert du WebP via l'`imgix` loader de `next.config.js` : html2canvas ne peut pas rasteriser une image cross-origin non taintée. Piste : inliner `default-icon.svg` en `data:` URI, ou passer les cellules en `<img>` simple pendant l'export.
 
