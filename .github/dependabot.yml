@@ -1,12 +1,40 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+# Dependabot version updates.
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+#
+# Yarn projects use the "npm" ecosystem: "yarn" is not a valid value and made
+# Dependabot reject the whole file.
 
 version: 2
 updates:
-  - package-ecosystem: "yarn"
+  - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
-      
+    open-pull-requests-limit: 5
+    groups:
+      # Patch and minor bumps land together instead of one PR per package.
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Data collectors (python/requirements.txt).
+  - package-ecosystem: "pip"
+    directory: "/python"
+    schedule:
+      interval: "monthly"
+    groups:
+      python:
+        patterns:
+          - "*"
+
+  # Keeps the workflow actions current, so a runtime deprecation (such as the
+  # Node.js 20 actions) shows up as a PR instead of a broken run.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    groups:
+      actions:
+        patterns:
+          - "*"

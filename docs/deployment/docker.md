@@ -16,7 +16,7 @@ The application answers on <http://localhost:3000>.
 
 ## Building the image yourself
 
-The `docker/Dockerfile` builds from Node.js 20 (the version used by CI) and
+The `docker/Dockerfile` builds from Node.js 22 (the version used by CI) and
 runs `yarn build` then `yarn start`:
 
 ```bash

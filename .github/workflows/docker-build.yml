@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Check Out Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # The `secrets` context cannot be used in a job-level `env` nor directly
       # in a step `if`, so it is turned into an output here: a fork without the

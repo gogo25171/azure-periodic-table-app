@@ -1,5 +1,5 @@
 # Node.js 20 is the version used by CI (Next.js 13 requires 18.17 or higher).
-FROM node:20-alpine
+FROM node:22-alpine
 
 # Set the working directory inside the container
 WORKDIR /usr/src/app

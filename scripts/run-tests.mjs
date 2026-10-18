@@ -4,7 +4,7 @@
  * Runs the test suite with the built-in Node.js runner.
  *
  * The obvious invocations are not portable: `node --test "tests/**\/*.test.mjs"`
- * needs the glob support of Node 22 (CI runs Node 20), and `node --test tests`
+ * needs the glob support of Node 22 (older local installs lack it), and `node --test tests`
  * fails on Windows, where the directory is resolved as a module. Listing the
  * files here works everywhere.
  *
