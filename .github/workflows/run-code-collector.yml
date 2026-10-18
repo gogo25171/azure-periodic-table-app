@@ -11,6 +11,10 @@ on:
   
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   update-snippets:
     runs-on: ubuntu-latest
@@ -19,12 +23,18 @@ jobs:
         working-directory: python
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
       with:
         python-version: 3.x
+
+    # The collector runs `terraform fmt` on the generated snippets.
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_wrapper: false
 
     - name: Install dependencies
       run: |
@@ -37,17 +47,17 @@ jobs:
     - name: Check for changes
       id: git-diff
       run: |
-        git diff --exit-code || echo "public/code has changed"
-        if git diff-index --quiet HEAD --; then 
+        # `git status` also catches snippets created for the first time (untracked).
+        if [ -z "$(git status --porcelain -- ..)" ]; then
           echo "changed=false" >> $GITHUB_OUTPUT
-        else 
+        else
           echo "changed=true" >> $GITHUB_OUTPUT
         fi
 
     - name: List changed files
       id: list-changes
       run: |
-        CHANGED_FILES=$(git diff --name-only HEAD | tr '\n' ' ')
+        CHANGED_FILES=$(git status --porcelain -- .. | awk '{print $2}' | tr '\n' ' ')
         echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
 
     - name: Commit and push
@@ -61,10 +71,10 @@ jobs:
         git push --force --set-upstream origin automated-code-snippet-update
 
     - name: Create pull request
-      if: github.event_name != 'pull_request'
+      if: steps.git-diff.outputs.changed == 'true' && github.event_name != 'pull_request'
       run: |
-        # Check if a PR already exists
-        if ! gh pr list --base main --head automated-code-snippet-update > /dev/null 2>&1; then
+        # `gh pr list` exits 0 even when nothing matches, so test its output
+        if [ -z "$(gh pr list --base main --head automated-code-snippet-update --json number --jq '.[].number')" ]; then
           # Create a new PR
           gh pr create --base main --head automated-code-snippet-update --title "Automated update of code snippets" --body "${{ env.CHANGED_FILES }}"
         fi

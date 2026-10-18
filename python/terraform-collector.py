@@ -260,12 +260,14 @@ for cloud in cloud_platforms:
             else:
                 print(f"Failed to fetch or parse content for {id}")
 
-    print("Files saved successfully for cloud: {cloud_name}!")
+    print(f"Files saved successfully for cloud: {cloud_name}!")
 
     # Run terraform fmt on all written files
     try:
         print("Running terraform fmt...")
         subprocess.run(["terraform", "fmt", "."], cwd=output_directory, check=True)
         print("Terraform fmt completed successfully!")
+    except FileNotFoundError:
+        print("terraform is not installed, skipping terraform fmt!")
     except subprocess.CalledProcessError:
         print("Error running terraform fmt!")
