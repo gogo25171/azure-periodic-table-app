@@ -21,7 +21,7 @@ flowchart TD
 ```
 
 `NavigationProgress` sits at the same level: the App Router exposes no
-navigation events in Next 13, so it watches link clicks and completes when the
+navigation events (Next 13 and 14), so it watches link clicks and completes when the
 pathname changes. Combined with `resource/[id]/loading.tsx`, which renders a
 skeleton sidebar, it removes the "frozen page" effect while a server component
 is being rendered.

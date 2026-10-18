@@ -43,6 +43,6 @@ The project started as the **Azure** periodic table and now ships five datasets:
 
 ## Technical stack
 
-Next.js 13 (App Router), TypeScript, Tailwind CSS and shadcn/ui components.
+Next.js 14 (App Router), TypeScript, Tailwind CSS and shadcn/ui components.
 The datasets are plain TypeScript modules, which keeps them type checked and
 diff friendly; a Python collector refreshes the Terraform snippets weekly.

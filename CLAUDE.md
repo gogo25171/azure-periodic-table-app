@@ -42,7 +42,7 @@ npm is not used at all: there is no `package-lock.json` (git-ignored) and `yarn 
 
 ## Architecture
 
-Next.js 13 App Router + Tailwind + shadcn/ui (`src/components/ui/`, configured via `components.json`). Path alias `@/*` → `./src/*`.
+Next.js 14 App Router + Tailwind + shadcn/ui (`src/components/ui/`, configured via `components.json`). Path alias `@/*` → `./src/*`.
 
 ### The page is rendered by the layout, not by `page.tsx`
 

@@ -1,6 +1,6 @@
 # Deploy on Vercel
 
-The application is a standard Next.js 13 App Router project: importing the
+The application is a standard Next.js 14 App Router project: importing the
 repository into [Vercel](https://vercel.com/new) is enough, the framework is
 detected automatically.
 
