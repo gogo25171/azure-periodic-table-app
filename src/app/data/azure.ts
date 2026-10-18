@@ -1628,7 +1628,7 @@ export const columns: ColumnType[] = [
         terraformCode: ``,
         bicepCode: ``,
         armCode: ``,
-        pricingReferenceUrl: 'https://azure.microsoft.com/en-us/pricing/details/container-registry/',
+        pricingReferenceUrl: 'https://azure.microsoft.com/en-us/pricing/details/container-instances/',
         portalUrl: 'https://portal.azure.com/#view/HubsExtension/BrowseResource/resourceType/Microsoft.ContainerInstance%2FcontainerGroups',
       },
       {
