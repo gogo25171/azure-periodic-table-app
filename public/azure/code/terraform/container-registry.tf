@@ -5,13 +5,15 @@ resource "azurerm_container_registry" "acr" {
   sku                 = "Premium"
   admin_enabled       = false
   georeplications {
-    location                = var.location
-    zone_redundancy_enabled = true
-    tags                    = var.tags
+    location                        = var.location
+    global_endpoint_routing_enabled = true
+    zone_redundancy_enabled         = true
+    tags                            = var.tags
   }
   georeplications {
-    location                = var.location
-    zone_redundancy_enabled = true
-    tags                    = var.tags
+    location                        = var.location
+    global_endpoint_routing_enabled = true
+    zone_redundancy_enabled         = true
+    tags                            = var.tags
   }
 }

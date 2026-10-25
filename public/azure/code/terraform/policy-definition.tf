@@ -5,15 +5,15 @@ resource "azurerm_policy_definition" "policy" {
   display_name = "acceptance test policy definition"
 
   metadata = <<METADATA
-  {
+    {
     "category": "General"
-  }
-  
-  METADATA
+    }
+
+METADATA
 
 
   policy_rule = <<POLICY_RULE
-  {
+ {
     "if": {
       "not": {
         "field": "location",
@@ -24,11 +24,11 @@ resource "azurerm_policy_definition" "policy" {
       "effect": "audit"
     }
   }
-  POLICY_RULE
+POLICY_RULE
 
 
   parameters = <<PARAMETERS
-  {
+ {
     "allowedLocations": {
       "type": "Array",
       "metadata": {
@@ -38,6 +38,6 @@ resource "azurerm_policy_definition" "policy" {
       }
     }
   }
-  PARAMETERS
+PARAMETERS
 
 }

@@ -2,11 +2,12 @@ resource "azurerm_hdinsight_kafka_cluster" "main" {
   name                = "kafka-${local.naming_suffix}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  cluster_version     = "4.0"
+  cluster_version     = "5.1"
   tier                = "Standard"
+  tls_min_version     = "1.2"
 
   component_version {
-    kafka = "2.1"
+    kafka = "3.2"
   }
 
   gateway {
@@ -15,20 +16,20 @@ resource "azurerm_hdinsight_kafka_cluster" "main" {
   }
 
   storage_account {
-    storage_container_id = azurerm_storage_container.main.id
-    storage_account_key  = azurerm_storage_account.main.primary_access_key
-    is_default           = true
+    storage_container_url = azurerm_storage_container.main.url
+    storage_account_key   = azurerm_storage_account.main.primary_access_key
+    is_default            = true
   }
 
   roles {
     head_node {
-      vm_size  = "Standard_D3_V2"
+      vm_size  = "Standard_A4_V2"
       username = "acctestusrvm"
       password = "AccTestvdSC4daf986!"
     }
 
     worker_node {
-      vm_size                  = "Standard_D3_V2"
+      vm_size                  = "Standard_A4_V2"
       username                 = "acctestusrvm"
       password                 = "AccTestvdSC4daf986!"
       number_of_disks_per_node = 3
@@ -36,7 +37,7 @@ resource "azurerm_hdinsight_kafka_cluster" "main" {
     }
 
     zookeeper_node {
-      vm_size  = "Standard_D3_V2"
+      vm_size  = "Standard_A4_V2"
       username = "acctestusrvm"
       password = "AccTestvdSC4daf986!"
     }

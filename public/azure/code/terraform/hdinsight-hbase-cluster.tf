@@ -2,11 +2,12 @@ resource "azurerm_hdinsight_hbase_cluster" "main" {
   name                = "hbase-${local.naming_suffix}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  cluster_version     = "3.6"
+  cluster_version     = "5.1"
   tier                = "Standard"
+  tls_min_version     = "1.2"
 
   component_version {
-    hbase = "1.1"
+    hbase = "2.4"
   }
 
   gateway {
@@ -15,9 +16,9 @@ resource "azurerm_hdinsight_hbase_cluster" "main" {
   }
 
   storage_account {
-    storage_container_id = azurerm_storage_container.main.id
-    storage_account_key  = azurerm_storage_account.main.primary_access_key
-    is_default           = true
+    storage_container_url = azurerm_storage_container.main.url
+    storage_account_key   = azurerm_storage_account.main.primary_access_key
+    is_default            = true
   }
 
   roles {

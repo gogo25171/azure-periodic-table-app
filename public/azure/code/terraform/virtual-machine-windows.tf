@@ -2,7 +2,7 @@ resource "azurerm_windows_virtual_machine" "main" {
   name                = "vmw${local.naming_suffix}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  size                = "Standard_F2"
+  size                = "Standard_D4_v5"
   admin_username      = "adminuser"
   admin_password      = "P@$$w0rd1234!"
   network_interface_ids = [

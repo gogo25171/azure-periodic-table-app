@@ -1,0 +1,6 @@
+resource "scaleway_function" "main" {
+  namespace_id = scaleway_function_namespace.main.id
+  runtime      = "go124"
+  handler      = "Handle"
+  privacy      = "private"
+}

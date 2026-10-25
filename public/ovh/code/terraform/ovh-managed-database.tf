@@ -1,0 +1,110 @@
+resource "ovh_cloud_project_database" "kafkadb" {
+  service_name          = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  description           = "my-first-kafka"
+  engine                = "kafka"
+  version               = "4.3"
+  flavor                = "b3-8"
+  plan                  = "production"
+  kafka_rest_api        = true
+  kafka_schema_registry = true
+  nodes {
+    region = "DE"
+  }
+  nodes {
+    region = "DE"
+  }
+  nodes {
+    region = "DE"
+  }
+}
+
+resource "ovh_cloud_project_database" "mongodb" {
+  service_name = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  description  = "my-first-mongodb"
+  engine       = "mongodb"
+  version      = "8.0"
+  plan         = "production"
+  nodes {
+    region = "GRA"
+  }
+  nodes {
+    region = "GRA"
+  }
+  nodes {
+    region = "GRA"
+  }
+  flavor = "db2-2"
+}
+
+resource "ovh_cloud_project_database" "mysqldb" {
+  service_name = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  description  = "my-first-mysql"
+  engine       = "mysql"
+  version      = "8.4"
+  plan         = "discovery"
+  nodes {
+    region = "SBG"
+  }
+  flavor = "b3-4"
+  advanced_configuration = {
+    "mysql.sql_mode" : "ANSI,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,STRICT_ALL_TABLES",
+    "mysql.sql_require_primary_key" : "true"
+  }
+}
+
+resource "ovh_cloud_project_database" "opensearchdb" {
+  service_name            = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  description             = "my-first-opensearch"
+  engine                  = "opensearch"
+  version                 = "3.3"
+  plan                    = "discovery"
+  opensearch_acls_enabled = true
+  nodes {
+    region = "UK"
+  }
+  flavor = "b3-4"
+}
+
+resource "ovh_cloud_project_database" "pgsqldb" {
+  service_name = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  description  = "my-first-postgresql"
+  engine       = "postgresql"
+  version      = "18"
+  plan         = "discovery"
+  nodes {
+    region = "WAW"
+  }
+  flavor = "b3-4"
+  ip_restrictions {
+    description = "ip 1"
+    ip          = "178.97.6.0/24"
+  }
+  ip_restrictions {
+    description = "ip 2"
+    ip          = "178.97.7.0/24"
+  }
+}
+
+resource "ovh_cloud_project_database" "grafana" {
+  service_name = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  description  = "my-first-grafana"
+  engine       = "grafana"
+  version      = "11.6"
+  plan         = "production"
+  nodes {
+    region = "GRA"
+  }
+  flavor = "b3-4"
+}
+
+resource "ovh_cloud_project_database" "valkeydb" {
+  service_name = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  description  = "my-first-valkey"
+  engine       = "valkey"
+  version      = "9.1"
+  plan         = "discovery"
+  nodes {
+    region = "BHS"
+  }
+  flavor = "b3-4"
+}

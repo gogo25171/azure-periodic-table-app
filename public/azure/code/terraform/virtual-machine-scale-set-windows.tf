@@ -2,7 +2,7 @@ resource "azurerm_windows_virtual_machine_scale_set" "main" {
   name                 = "vmss-${local.naming_suffix}"
   resource_group_name  = azurerm_resource_group.main.name
   location             = azurerm_resource_group.main.location
-  sku                  = "Standard_F2"
+  sku                  = "Standard_D4_v5"
   instances            = 1
   admin_password       = "P@55w0rd1234!"
   admin_username       = "adminuser"
