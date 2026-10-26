@@ -79,14 +79,16 @@ def extract_resources_and_data(content, resource_type):
     resource_pattern = rf'^resource\s+"{resource_type}"\s+".*?"\s*{{'
 
     resource_blocks = extract_blocks(content, resource_pattern)
-    data_blocks = set()
-    locals_blocks = set()
+    # Dicts dedupe while keeping the documentation order: a set followed the
+    # per-run string hash, so every run reshuffled the blocks of the snippets.
+    data_blocks = {}
+    locals_blocks = {}
 
     for resource_block in resource_blocks:
         if 'data.' in resource_block:
-            data_blocks.update(extract_blocks(content, data_pattern))
+            data_blocks.update(dict.fromkeys(extract_blocks(content, data_pattern)))
         if 'local.' in resource_block:
-            locals_blocks.update(extract_blocks(content, locals_pattern))
+            locals_blocks.update(dict.fromkeys(extract_blocks(content, locals_pattern)))
 
     combined_blocks = list(data_blocks) + list(locals_blocks) + resource_blocks
     return '\n\n'.join(combined_blocks)
