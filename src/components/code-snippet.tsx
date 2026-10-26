@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import bicep from 'react-syntax-highlighter/dist/esm/languages/prism/bicep';
+import hcl from 'react-syntax-highlighter/dist/esm/languages/prism/hcl';
+import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Check, CopyIcon } from 'lucide-react';
+
+// The light build only bundles the languages registered here (the full Prism
+// build ships every grammar): add one when a new snippet language is used.
+SyntaxHighlighter.registerLanguage('bicep', bicep);
+SyntaxHighlighter.registerLanguage('hcl', hcl);
+SyntaxHighlighter.registerLanguage('json', json);
 
 export const CodeSnippet = ({
   codeString = `resource "aws_instance" "example" {
