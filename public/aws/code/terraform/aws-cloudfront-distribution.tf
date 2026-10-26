@@ -25,14 +25,14 @@ data "aws_iam_policy_document" "origin_bucket_policy" {
   }
 }
 
-data "aws_route53_zone" "my_domain" {
-  name = local.my_domain
-}
-
 data "aws_acm_certificate" "my_domain" {
   region   = "us-east-1"
   domain   = "*.${local.my_domain}"
   statuses = ["ISSUED"]
+}
+
+data "aws_route53_zone" "my_domain" {
+  name = local.my_domain
 }
 
 locals {

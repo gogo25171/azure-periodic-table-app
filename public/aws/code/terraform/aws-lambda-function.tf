@@ -1,9 +1,3 @@
-data "archive_file" "main" {
-  type        = "zip"
-  source_file = "${path.module}/lambda/index.js"
-  output_path = "${path.module}/lambda/function.zip"
-}
-
 data "aws_iam_policy_document" "assume_role" {
   statement {
     effect = "Allow"
@@ -15,6 +9,12 @@ data "aws_iam_policy_document" "assume_role" {
 
     actions = ["sts:AssumeRole"]
   }
+}
+
+data "archive_file" "main" {
+  type        = "zip"
+  source_file = "${path.module}/lambda/index.js"
+  output_path = "${path.module}/lambda/function.zip"
 }
 
 resource "aws_lambda_function" "main" {

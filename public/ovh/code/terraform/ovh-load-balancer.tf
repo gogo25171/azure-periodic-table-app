@@ -1,11 +1,3 @@
-data "ovh_order_cart_product_options_plan" "bhs" {
-  cart_id           = data.ovh_order_cart_product_plan.iplb.cart_id
-  price_capacity    = data.ovh_order_cart_product_plan.iplb.price_capacity
-  product           = data.ovh_order_cart_product_plan.iplb.product
-  plan_code         = data.ovh_order_cart_product_plan.iplb.plan_code
-  options_plan_code = "iplb-zone-lb1-rbx"
-}
-
 data "ovh_me" "myaccount" {}
 
 data "ovh_order_cart" "mycart" {
@@ -17,6 +9,14 @@ data "ovh_order_cart_product_plan" "iplb" {
   price_capacity = "renew"
   product        = "ipLoadbalancing"
   plan_code      = "iplb-lb1"
+}
+
+data "ovh_order_cart_product_options_plan" "bhs" {
+  cart_id           = data.ovh_order_cart_product_plan.iplb.cart_id
+  price_capacity    = data.ovh_order_cart_product_plan.iplb.price_capacity
+  product           = data.ovh_order_cart_product_plan.iplb.product
+  plan_code         = data.ovh_order_cart_product_plan.iplb.plan_code
+  options_plan_code = "iplb-zone-lb1-rbx"
 }
 
 resource "ovh_iploadbalancing" "iplb_lb1" {
