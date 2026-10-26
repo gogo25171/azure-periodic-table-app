@@ -37,4 +37,7 @@ jobs:
 
       - name: Print the advisories
         continue-on-error: true
-        run: yarn audit --level high
+        # yarn 1 ignores --level for its exit code, a bitmask of every severity
+        # found (1 info, 2 low, 4 moderate, 8 high, 16 critical): keep only the
+        # high and critical bits so a moderate advisory does not flag the step.
+        run: yarn audit --level high || [ $(( $? & 24 )) -eq 0 ]
