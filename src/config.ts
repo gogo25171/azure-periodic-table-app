@@ -19,7 +19,7 @@ function envUrl(value: string | undefined, fallback: string): string {
 
 const DEFAULT_URLS = {
   site: 'https://azureperiodictable.com/',
-  github: 'https://github.com/onwardplatforms/azure-periodic-table-app',
+  github: 'https://github.com/gogo25171/azure-periodic-table-app',
   twitter: 'https://twitter.com/reillyjodonnell',
   linkedin: 'https://www.linkedin.com/in/justin-o-connor-67376483/',
   docs: 'https://gogo25171.github.io/azure-periodic-table-app/',

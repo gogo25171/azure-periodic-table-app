@@ -1,7 +1,7 @@
 # Installation
 
 ```bash
-git clone https://github.com/onwardplatforms/azure-periodic-table-app.git
+git clone https://github.com/gogo25171/azure-periodic-table-app.git
 cd azure-periodic-table-app
 yarn install
 ```
