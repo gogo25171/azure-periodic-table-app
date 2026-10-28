@@ -1,0 +1,14 @@
+# Read by BuildKit for docker/Dockerfile (the build context is the repo root).
+# Local builds, dependencies and secrets stay out of the image.
+node_modules
+.next
+.swc
+out
+build
+site
+coverage
+.git
+.env
+.env.*
+!.env.example
+python/__pycache__

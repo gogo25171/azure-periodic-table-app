@@ -1,0 +1,37 @@
+# Runs the app and the documentation site side by side.
+#
+#   docker compose -f docker/compose.yml up -d --build
+#   app  -> http://localhost:3000   (/admin needs ADMIN_PASSWORD in .env)
+#   docs -> http://localhost:8000   (mkdocs serve, reloads on edits)
+#
+# Server-side variables (ADMIN_PASSWORD, OPENAI_API_KEY...) are read from the
+# root .env at runtime. NEXT_PUBLIC_* ones are inlined by `next build`, so
+# changing them needs `--build`.
+
+name: periodic-table
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    env_file:
+      - path: ../.env
+        required: false
+    ports:
+      - '3000:3000'
+    restart: unless-stopped
+
+  docs:
+    # The full python image ships git, which git-revision-date-localized needs.
+    image: python:3.12
+    working_dir: /repo
+    volumes:
+      - ..:/repo
+    command: >
+      sh -c "git config --global --add safe.directory /repo &&
+             pip install --quiet --root-user-action=ignore -r docs/requirements.txt &&
+             mkdocs serve --dev-addr 0.0.0.0:8000"
+    ports:
+      - '8000:8000'
+    restart: unless-stopped
