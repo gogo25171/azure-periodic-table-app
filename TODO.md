@@ -34,6 +34,7 @@
   > - pour Bicep/ARM : la **version d'API** utilisée (`Microsoft.X/y@2024-01-01`) ;
   > - lien vers le CHANGELOG du provider.
   > Libellés dans les deux dictionnaires (`en` / `fr`). Ne rien afficher quand l'information manque (les providers sans snippets aujourd'hui).
+  > **Commencé** : chaque onglet de la carte Code affiche déjà ce qui se lit sans les collecteurs (`src/lib/snippet-versions.ts`, `src/components/snippet-version-info.tsx`) : provider et type de ressource Terraform (depuis `terraformUrl`), dernière version publiée et sa date (registre Terraform, cache 1 h, `src/lib/terraform-registry.ts`), lien CHANGELOG, avertissement quand `terraformUrl` est figé sur une ancienne version ; pour Bicep/ARM, type Azure, version d'API, badge préversion et date de l'API. **Reste** (après l'étape 3) : version sur laquelle repose le snippet, date de collecte, version minimale / d'apparition, dépréciation et remplaçant.
   > **Patch notes complètes par version** : les CHANGELOG.md sont parsables (`BREAKING CHANGES` / `FEATURES` / `ENHANCEMENTS` / `BUG FIXES`), mais **mon avis** reste que c'est hors sujet ici. Ça mérite son propre projet (un « changelog explorer » multi-providers) ; ici on se limite à ce qui concerne la ressource affichée.
 
 ### Autres chantiers

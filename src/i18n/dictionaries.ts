@@ -65,6 +65,17 @@ const en = {
   'sidebar.codeDescription':
     'Deploy your infrastructure as code using your preferred tooling.',
   'sidebar.officialDocumentation': 'Official Documentation',
+  'versions.provider': 'Provider',
+  'versions.resourceType': 'Resource type',
+  'versions.latestRelease': 'Latest release',
+  'versions.publishedOn': 'published {date} ({age})',
+  'versions.changelog': 'Release notes',
+  'versions.pinned':
+    'The documentation link is pinned to release {version}: the resource may have been removed from later releases.',
+  'versions.azureType': 'Azure type',
+  'versions.apiVersion': 'API version',
+  'versions.since': 'API published',
+  'versions.preview': 'preview',
   'sidebar.utilities': 'Utilities',
   'sidebar.utilitiesDescription':
     'Utilities to support app deployment or configuration.',
@@ -176,6 +187,17 @@ const fr: Dictionary = {
   'sidebar.codeDescription':
     'Déployez votre infrastructure as code avec l’outil de votre choix.',
   'sidebar.officialDocumentation': 'Documentation officielle',
+  'versions.provider': 'Provider',
+  'versions.resourceType': 'Type de ressource',
+  'versions.latestRelease': 'Dernière version',
+  'versions.publishedOn': 'publiée le {date} ({age})',
+  'versions.changelog': 'Notes de version',
+  'versions.pinned':
+    'Le lien de documentation est figé sur la version {version} : la ressource a peut-être été retirée des versions suivantes.',
+  'versions.azureType': 'Type Azure',
+  'versions.apiVersion': 'Version d’API',
+  'versions.since': 'API publiée le',
+  'versions.preview': 'préversion',
   'sidebar.utilities': 'Utilitaires',
   'sidebar.utilitiesDescription':
     'Utilitaires pour le déploiement ou la configuration.',

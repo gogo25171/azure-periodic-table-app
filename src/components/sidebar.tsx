@@ -15,6 +15,11 @@ import { Icons } from './ui/icons';
 import { ChatBox } from './chatbox';
 import { URLBox } from './ui/url-box';
 import { useTranslation } from '@/i18n/LanguageContext';
+import type { SnippetVersions } from '@/lib/snippet-versions';
+import {
+  ApiVersionInfoBox,
+  TerraformVersionInfoBox,
+} from './snippet-version-info';
 
 import {
   Sheet,
@@ -40,9 +45,11 @@ import { Label } from './ui/label';
 export default function Sidebar({
   activeElement,
   provider = 'azure',
+  versions = {},
 }: {
   activeElement: Item | null;
   provider?: string;
+  versions?: SnippetVersions;
 }) {
   const [open, setOpen] = useState(true);
   const isMobile = useMobile();
@@ -298,6 +305,9 @@ ALWAYS return valid markdown.
                       size="md"
                     />
                   )}
+                  {versions.terraform && (
+                    <TerraformVersionInfoBox info={versions.terraform} />
+                  )}
                   <CodeSnippet codeString={activeElement.terraformCode} language="hcl" />
                 </TabsContent>
                 {provider === 'azure' && (
@@ -312,6 +322,7 @@ ALWAYS return valid markdown.
                           size="md"
                         />
                       )}
+                      {versions.bicep && <ApiVersionInfoBox info={versions.bicep} />}
                       <CodeSnippet codeString={activeElement.bicepCode} language="bicep" />
                     </TabsContent>
                     <TabsContent value="arm">
@@ -324,6 +335,7 @@ ALWAYS return valid markdown.
                           size="md"
                         />
                       )}
+                      {versions.arm && <ApiVersionInfoBox info={versions.arm} />}
                       <CodeSnippet codeString={activeElement.armCode} language="json" />
                     </TabsContent>
                   </>

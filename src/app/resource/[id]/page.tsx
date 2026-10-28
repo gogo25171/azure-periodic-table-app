@@ -4,6 +4,13 @@ import * as googleData from '@/app/data/google';
 import * as ovhData from '@/app/data/ovh';
 import * as scalewayData from '@/app/data/scaleway';
 import Sidebar from '@/components/sidebar';
+import {
+  parseArmApiVersion,
+  parseBicepApiVersion,
+  parseTerraformUrl,
+  type SnippetVersions,
+} from '@/lib/snippet-versions';
+import { fetchLatestProviderRelease } from '@/lib/terraform-registry';
 import fs from 'fs';
 import path from 'path';
 
@@ -81,5 +88,19 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     armCode: armCodeSnippet,
   };
 
-  return <Sidebar activeElement={elementWithCodeSnippet} provider={cloud} />;
+  const terraform = parseTerraformUrl(activeElement.terraformUrl);
+  const latest = terraform && (await fetchLatestProviderRelease(terraform.source));
+  const versions: SnippetVersions = {
+    terraform: terraform && {
+      ...terraform,
+      latestVersion: latest?.version,
+      latestPublishedAt: latest?.publishedAt,
+    },
+    bicep: parseBicepApiVersion(bicepCodeSnippet),
+    arm: parseArmApiVersion(armCodeSnippet),
+  };
+
+  return (
+    <Sidebar activeElement={elementWithCodeSnippet} provider={cloud} versions={versions} />
+  );
 }
