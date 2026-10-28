@@ -154,6 +154,7 @@ nav:
       - Adding new providers: contributing/adding-providers.md
       - Adding new resources: contributing/adding-resources.md
       - Tooling and CI: contributing/tooling.md
+      - Update checklist: contributing/maintenance.md
   - Reference:
       - Environment variables: reference/environment-variables.md
       - Architecture: reference/architecture.md

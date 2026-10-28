@@ -104,6 +104,10 @@ Icons are referenced by an `icon` path string on each `Item`, resolved against `
 - PNG export ([download.tsx](src/components/download.tsx)) waits for every `<img>` of `#exportable-table-container` to settle, then rasterizes it with html2canvas — any DOM change to that container's id affects the exported image.
 - `.env.example` documents every variable; the reference is [docs/reference/environment-variables.md](docs/reference/environment-variables.md).
 
+## Updating the project
+
+When asked to *update* the project (« mets à jour »), walk [docs/contributing/maintenance.md](docs/contributing/maintenance.md): it lists every check that is still manual (data warnings, the weekly snippet PR, new and retired services, preview API versions, icons, dependencies, docs). Report what each step found and add a step there whenever something new needs a human.
+
 ## Conventions
 
 - Source code, comments and UI strings are in **English**; French UI text lives in the `fr` dictionary.

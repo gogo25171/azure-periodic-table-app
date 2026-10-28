@@ -2,6 +2,13 @@
 
 ## En cours / à faire
 
+### Prochaines demandes (2026-10-28)
+
+- [ ] **Ressources manquantes** : passer les catalogues en revue et ajouter ce qui manque, en commençant par **Azure AI Foundry** (qui absorbe Azure OpenAI et AI Studio : `azurerm_ai_foundry`, `azurerm_ai_foundry_project`), puis les autres services récents de chaque provider. Pour les renommages, garder l'id existant et changer le nom.
+- [ ] **Icônes des autres providers via un sous-module git** : chercher des packs d'icônes officiels et open source sur GitHub (AWS Architecture Icons, Google Cloud icons, OVHcloud, Scaleway), vérifier leur licence, les brancher en `git submodule` sous `public/<provider>/icons/`, puis renseigner le champ `icon` des ressources.
+- [ ] **Autres formats d'affichage** : en plus du tableau périodique, une vue **mindmap** (le provider au centre, une boîte par catégorie avec un sous-titre d'une ligne, ses ressources listées avec leur icône), comme le « AWS Cloud Mindmap » de LinkedIn. Même données, seul le rendu change : un sélecteur de vue dans la barre d'outils. La vue mindmap rend aussi l'export PNG plus lisible pour partager.
+- [ ] **Doc : visite guidée annotée** : captures de l'interface avec des repères numérotés et leur légende (façon notice d'appareil), générées par un script pour pouvoir les refaire quand l'interface change.
+
 ### 🔴 Priorité 1 : espace admin (fraîcheur des données) et versions des ressources
 
 > **Consigne** : c'est le prochain chantier. Quand je demande « qu'est-ce qu'il faut faire ? », on fait ce bloc dans l'ordre, puis on commit (un commit par étape, `yarn verify` vert à chaque fois).
@@ -51,6 +58,7 @@
   > À l'inverse `Virtual Desktop` est très Azure-centré (seulement WorkSpaces et Cloud Workstations ailleurs) et `Migration` ne concerne qu'Azure/AWS : je les garderais quand même, une catégorie peu peuplée ne coûte rien visuellement.
   > **Contre les catégories spécifiques par provider** : la taxonomie commune est justement ce qui permet de comparer deux clouds côte à côte, et la légende + les couleurs sont globales (`categoryData`). Si un provider a un service inclassable, un champ `tags?: string[]` sur `Item` serait préférable à une catégorie dédiée.
   > **Coût de l'ajout** : enum `Categories` + une couleur dans `categoryData` + les deux dictionnaires i18n + reclasser une trentaine de ressources. ~1h. Décision à prendre avant d'ajouter d'autres providers, pour ne pas reclasser deux fois.
+  > **Source externe qui va dans le même sens** : le « AWS Cloud Mindmap » vu sur LinkedIn découpe le catalogue en 11 boîtes : Compute, Storage, Networking, Databases, Integration & Messaging, Data Analytics, AI & ML, **Security & Identity**, **Monitoring**, **DevOps & IaC** (+ le centre). On retrouve exactement nos deux trous, plus DevOps/IaC (CodePipeline, CloudFormation…) qu'on range aujourd'hui dans `Dev Tools`. Chaque boîte a aussi un sous-titre d'une ligne (« Run your code », « Keep your files ») : bonne idée pour la légende et les infobulles de catégorie.
   >
   > **À trancher : proposer deux modes de catégorisation dans l'interface ?**
   > - *Mode « unifié »* (actuel) : nos 13 catégories, identiques pour tous les providers → permet de comparer deux clouds côte à côte, une seule légende, une seule palette.
