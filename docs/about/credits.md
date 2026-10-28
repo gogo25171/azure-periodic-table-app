@@ -70,6 +70,9 @@ the service.
 - [react-syntax-highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter)
   for the code snippets
 - [html2canvas](https://html2canvas.hertzen.com/) for the PNG export
+- [Requests](https://requests.readthedocs.io/) and
+  [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/) for the
+  snippet collectors in `python/`
 - [MkDocs](https://www.mkdocs.org/) and
   [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) for this
   documentation, with

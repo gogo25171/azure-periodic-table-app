@@ -90,6 +90,9 @@ plugins:
             Credits: Crédits
   # Replaces the hand written "last updated" footers.
   - git-revision-date-localized:
+      # Runs `git log` per page and per language: docker/compose.yml turns it
+      # off for the local preview, CI and the published site keep it.
+      enabled: !ENV [MKDOCS_GIT_DATES, true]
       enable_creation_date: true
       fallback_to_build_date: true
       # A page that is not committed yet must not fail `mkdocs build --strict`.

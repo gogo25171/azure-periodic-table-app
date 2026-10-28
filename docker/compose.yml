@@ -26,6 +26,9 @@ services:
     # The full python image ships git, which git-revision-date-localized needs.
     image: python:3.12
     working_dir: /repo
+    environment:
+      # The git dates plugin is the slowest part of a rebuild on a mounted repo.
+      MKDOCS_GIT_DATES: 'false'
     volumes:
       - ..:/repo
     command: >
