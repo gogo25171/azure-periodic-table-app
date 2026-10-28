@@ -24,6 +24,8 @@
   > Aujourd'hui tous les `terraformUrl` pointent sur `/latest/` et le collecteur lit la branche `main` des docs GitHub : on ne sait pas sur quelle version reposent les snippets.
   > `python/terraform-collector.py` écrit un fichier `public/<provider>/code/sync.json` : namespace/nom du provider, **version** (dernier tag GitHub au moment de la collecte, ou mieux : collecter directement sur ce tag plutôt que sur `main`), date de collecte, SHA du commit des docs, et la liste des ressources ajoutées / modifiées / supprimées pendant ce run. Garder un **historique** (les N derniers runs) dans le même fichier, pour l'étape 5. Faire de même pour `arm-collector.py` et `bicep-collector.py` (version d'API Azure au lieu de version de provider).
   > Source de la dernière version publiée : `https://registry.terraform.io/v1/providers/<namespace>/<name>` → champ `version`.
+`  > **Par ressource, depuis les CHANGELOG (demandé le 2026-10-28, à faire en premier)** : les CHANGELOG des providers ont un format stable, donc pas besoin d'IA pour l'essentiel. ``**New Resource:** `azurerm_x` `` donne la **version d'introduction**, et les lignes `` - `azurerm_x` - ... `` sous chaque titre de version donnent l'**historique propre à la ressource** (à afficher dans la fiche à la place du lien CHANGELOG global). Attention : azurerm découpe ses changelogs par version majeure (`CHANGELOG-v2.md`, `-v3.md`…), il faut tous les lire. Le collecteur écrit le résultat par ressource (`since`, `changes: [{version, date, kind, text}]`) à côté de `sync.json`.
+  > **Avec une IA, en plus** : résumer l'historique d'une ressource, classer les changements (breaking / majeur / mineur), repérer les dépréciations et le remplaçant, et extraire d'autres infos utiles des notes de version. Garder l'IA hors du chemin critique : résultat mis en cache dans les fichiers générés, relu dans la PR hebdomadaire.
 
 - [ ] **4. Signaler un provider en retard sur sa dernière version.**
   > Règle `provider-version-outdated` : compare la version de `sync.json` à celle du registre Terraform. Écart de version mineure → `info`, écart de version majeure → `warning` (jamais `error` : la CI ne doit pas casser parce que HashiCorp publie une release). Comme ça demande un appel réseau : dans la route admin avec un cache (1 h), et dans la CLI derrière un flag `yarn validate:data --online` (la CI reste hors-ligne).
@@ -47,6 +49,9 @@
 ### Autres chantiers
 
 - [ ] Ajouter une section prix qui viens du projet "terracost" (que je modifie) ou autres
+  > **Précision (2026-10-28)** : afficher le **prix détaillé** dans la fiche ressource (par SKU / région / unité de facturation), pas seulement le lien vers le calculateur.
+
+- [ ] **Séance d'optimisation** : poids des pages et du bundle (`next build` + analyse), rendu des 150 cellules, chargement des icônes, temps de réponse de `/resource/[id]` (lectures disque + appel au registre), temps de build Docker.
 
 - [ ] Corriger que quand on télécharge l'image, les icônes par défaut (quand il ne trouve pas l'icône inscrit dans le JSON de la ressource) ne s'affichent pas toujours.
   > **Note (partiellement traité)** : deux corrections ont été faites : (1) les cellules sans icône affichent désormais `default-icon.svg` au lieu de rien (`src/components/column.tsx`), (2) `download.tsx` attend que **toutes** les images soient chargées avant de lancer html2canvas. S'il reste des trous dans l'export, la cause suivante est `next/image` qui sert du WebP via l'`imgix` loader de `next.config.js` : html2canvas ne peut pas rasteriser une image cross-origin non taintée. Piste : inliner `default-icon.svg` en `data:` URI, ou passer les cellules en `<img>` simple pendant l'export.

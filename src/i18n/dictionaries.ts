@@ -67,9 +67,9 @@ const en = {
   'sidebar.officialDocumentation': 'Official Documentation',
   'versions.provider': 'Provider',
   'versions.resourceType': 'Resource type',
-  'versions.latestRelease': 'Latest release',
+  'versions.latestRelease': 'Latest provider release',
   'versions.publishedOn': 'published {date} ({age})',
-  'versions.changelog': 'Release notes',
+  'versions.changelog': 'Provider release notes',
   'versions.pinned':
     'The documentation link is pinned to release {version}: the resource may have been removed from later releases.',
   'versions.azureType': 'Azure type',
@@ -189,9 +189,9 @@ const fr: Dictionary = {
   'sidebar.officialDocumentation': 'Documentation officielle',
   'versions.provider': 'Provider',
   'versions.resourceType': 'Type de ressource',
-  'versions.latestRelease': 'Dernière version',
+  'versions.latestRelease': 'Dernière version du provider',
   'versions.publishedOn': 'publiée le {date} ({age})',
-  'versions.changelog': 'Notes de version',
+  'versions.changelog': 'Notes de version du provider',
   'versions.pinned':
     'Le lien de documentation est figé sur la version {version} : la ressource a peut-être été retirée des versions suivantes.',
   'versions.azureType': 'Type Azure',
