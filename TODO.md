@@ -2,6 +2,42 @@
 
 ## En cours / à faire
 
+### 🔴 Priorité 1 : espace admin (fraîcheur des données) et versions des ressources
+
+> **Consigne** : c'est le prochain chantier. Quand je demande « qu'est-ce qu'il faut faire ? », on fait ce bloc dans l'ordre, puis on commit (un commit par étape, `yarn verify` vert à chaque fois).
+
+- [ ] **1. `/admin` actif seulement si `ADMIN_PASSWORD` est défini, sinon 404 (en dev comme en prod).**
+  > Aujourd'hui la page s'affiche toujours et l'API répond 503 sans mot de passe. Cible : sans `ADMIN_PASSWORD`, `/admin` **et** `/api/admin/*` répondent 404, comme si la route n'existait pas.
+  > **Implémentation** : `src/app/admin/page.tsx` est un composant client → le renommer en `admin-dashboard.tsx` et créer un `page.tsx` serveur qui appelle `notFound()` quand `process.env.ADMIN_PASSWORD` est vide, sinon rend le dashboard. Dans `api/admin/audit/route.ts`, remplacer les 503 par des 404 (GET et POST). Éviter un `middleware.ts` : il tourne sur le runtime edge, où la lecture des variables serveur au runtime est moins fiable en auto-hébergé (Docker). Mettre à jour `.env.example`, `docs/features/admin.md`, `docs/getting-started/3-configuration.md` et `docs/reference/environment-variables.md`.
+
+- [ ] **2. Détecter les snippets orphelins (fichier sans ressource).**
+  > Nouvelle règle `orphan-snippet` (warning) dans `src/lib/data-audit.ts` : tout fichier de `public/<provider>/code/{terraform,bicep,arm}/` dont le nom ne correspond à aucun `id` du dataset (ressource renommée ou supprimée). `data-audit.ts` reste pur : la liste des fichiers lui est injectée comme `iconExists` (nouvelle option `listSnippetFiles`), fournie par la route admin et par `scripts/validate-data.mjs`. Ajouter un test dans `tests/`.
+
+- [ ] **3. Tracer la version du provider Terraform utilisée à chaque collecte.**
+  > Aujourd'hui tous les `terraformUrl` pointent sur `/latest/` et le collecteur lit la branche `main` des docs GitHub : on ne sait pas sur quelle version reposent les snippets.
+  > `python/terraform-collector.py` écrit un fichier `public/<provider>/code/sync.json` : namespace/nom du provider, **version** (dernier tag GitHub au moment de la collecte, ou mieux : collecter directement sur ce tag plutôt que sur `main`), date de collecte, SHA du commit des docs, et la liste des ressources ajoutées / modifiées / supprimées pendant ce run. Garder un **historique** (les N derniers runs) dans le même fichier, pour l'étape 5. Faire de même pour `arm-collector.py` et `bicep-collector.py` (version d'API Azure au lieu de version de provider).
+  > Source de la dernière version publiée : `https://registry.terraform.io/v1/providers/<namespace>/<name>` → champ `version`.
+
+- [ ] **4. Signaler un provider en retard sur sa dernière version.**
+  > Règle `provider-version-outdated` : compare la version de `sync.json` à celle du registre Terraform. Écart de version mineure → `info`, écart de version majeure → `warning` (jamais `error` : la CI ne doit pas casser parce que HashiCorp publie une release). Comme ça demande un appel réseau : dans la route admin avec un cache (1 h), et dans la CLI derrière un flag `yarn validate:data --online` (la CI reste hors-ligne).
+
+- [ ] **5. Dans `/admin` : voir si les données sont à jour et l'historique des mises à jour automatiques.**
+  > Nouvelle section « Synchronisation » en tête du dashboard, par provider : version collectée vs dernière publiée (badge à jour / en retard), date de la dernière collecte (« il y a 3 jours »), nombre de snippets / ressources sans snippet / orphelins.
+  > Section « Tâches planifiées » : chaque workflow cron (`run-code-collector.yml` le dimanche à 00:00 UTC, `dependency-check.yml` le lundi à 06:00 UTC) avec sa planification lisible, la **prochaine exécution**, et ses derniers runs : date, statut (succès / échec), PR ouverte et **ce qui a changé** (ressources ajoutées / modifiées / supprimées, lues dans l'historique de `sync.json`).
+  > Les statuts et liens des runs viennent de l'API GitHub (`GET /repos/{owner}/{repo}/actions/workflows/{file}/runs`) avec un `GITHUB_TOKEN` côté serveur, optionnel : sans token, n'afficher que ce que contient `sync.json`. À documenter dans `.env.example`.
+
+- [ ] **6. Fiche ressource : informer l'utilisateur sur les versions et la compatibilité.**
+  > Nouvelle section « Compatibilité » dans la sidebar de `/resource/[id]`, alimentée par les métadonnées écrites par les collecteurs (un `public/<provider>/code/meta/<id>.json` ou un champ par ressource dans `sync.json`), lues côté serveur dans `resource/[id]/page.tsx` comme les snippets :
+  > - **version du provider** sur laquelle repose le snippet (« basé sur azurerm 4.12.0 ») et date de mise à jour ;
+  > - **version minimale** de Terraform et du provider pour utiliser la ressource (bloc `required_providers` / version d'apparition de la ressource, à extraire du CHANGELOG du provider) ;
+  > - **ressource dépréciée** : badge bien visible et ressource de remplacement si la doc l'indique (les docs contiennent des mentions « deprecated » / « superseded by ») ;
+  > - pour Bicep/ARM : la **version d'API** utilisée (`Microsoft.X/y@2024-01-01`) ;
+  > - lien vers le CHANGELOG du provider.
+  > Libellés dans les deux dictionnaires (`en` / `fr`). Ne rien afficher quand l'information manque (les providers sans snippets aujourd'hui).
+  > **Patch notes complètes par version** : les CHANGELOG.md sont parsables (`BREAKING CHANGES` / `FEATURES` / `ENHANCEMENTS` / `BUG FIXES`), mais **mon avis** reste que c'est hors sujet ici. Ça mérite son propre projet (un « changelog explorer » multi-providers) ; ici on se limite à ce qui concerne la ressource affichée.
+
+### Autres chantiers
+
 - [ ] Ajouter une section prix qui viens du projet "terracost" (que je modifie) ou autres
 
 - [ ] Corriger que quand on télécharge l'image, les icônes par défaut (quand il ne trouve pas l'icône inscrit dans le JSON de la ressource) ne s'affichent pas toujours.
@@ -44,12 +80,6 @@
   > Tous ceux entre parenthèses ont un provider Terraform officiel, donc `yarn add:provider` + le collecteur de snippets fonctionnent directement. Commencer par Hetzner et DigitalOcean : petits catalogues (~20 ressources) et doc très propre.
 
 - [ ] Ajouter les packs d'icônes pour AWS, Google Cloud, OVHcloud et Scaleway (`public/<provider>/icons/<Catégorie>/`), puis renseigner le champ `icon` des ressources. Aujourd'hui seul Azure a ses icônes ; les autres tombent sur `default-icon.svg`.
-
-- [ ] Suivre les versions des providers Terraform sur lesquelles on se base.
-  > **Note** : aujourd'hui tous les `terraformUrl` pointent sur `/latest/`, donc les snippets peuvent silencieusement diverger de ce qui est affiché. Deux choses à faire :
-  > 1. **Tracer la version de référence** : stocker, par provider, la version du provider Terraform utilisée lors de la dernière collecte (par exemple un `public/<provider>/code/.provider-version.json` écrit par `terraform-collector.py`, et l'afficher dans la fiche ressource ou dans l'interface admin). L'API du registre donne la dernière version publiée : `https://registry.terraform.io/v1/providers/<namespace>/<name>` → champ `version`.
-  > 2. **Comparer avec la dernière version publiée** et signaler l'écart (nouveau contrôle « provider-version-outdated » dans `data-audit.ts`, ou une ligne dans le rapport hebdomadaire).
-  > **Patch notes par version** : les CHANGELOG.md des providers sont sur GitHub et suivent un format régulier (`BREAKING CHANGES` / `FEATURES` / `ENHANCEMENTS` / `BUG FIXES`), donc c'est parsable — on peut en extraire les versions majeures et les ressources ajoutées/supprimées. **Mon avis** : intéressant mais hors sujet pour un tableau périodique. Ça mérite son propre projet (un « changelog explorer » multi-providers) ; ici on se limiterait à afficher « basé sur azurerm 4.x — dernière version 4.y » et un lien vers le changelog.
 
 - [ ] Publier le TODO dans la documentation MkDocs, mais avec de vrais visuels.
   > **Note** : une liste de cases à cocher brute n'apporte rien de plus que le fichier `TODO.md` du dépôt. Ce qui vaudrait le coup : une page « Roadmap » avec (a) un diagramme Mermaid `gantt` ou `timeline` des chantiers (Mermaid est déjà activé dans MkDocs via `pymdownx.superfences`), (b) des cartes Material (`grid cards`) par chantier avec statut et effort estimé, (c) des badges d'état, et (d) éventuellement les compteurs réels (ressources par provider, erreurs de données) générés automatiquement depuis `yarn validate:data --json` au moment du build.
