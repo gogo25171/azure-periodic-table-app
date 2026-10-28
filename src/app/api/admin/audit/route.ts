@@ -20,6 +20,12 @@ function iconExists(_provider: string, iconPath: string): boolean {
   return exists;
 }
 
+/** Lists public/<provider>/code/<language>/, read fresh on every audit. */
+function listSnippetFiles(provider: string, language: string): string[] {
+  const directory = path.join(process.cwd(), 'public', provider, 'code', language);
+  return fs.existsSync(directory) ? fs.readdirSync(directory) : [];
+}
+
 /** Constant-time-ish comparison so the route does not leak the password length. */
 function passwordMatches(candidate: string, expected: string): boolean {
   if (candidate.length !== expected.length) return false;
@@ -62,7 +68,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
-  const report = auditProviders({ iconExists });
+  const report = auditProviders({ iconExists, listSnippetFiles });
   logger.info(
     'admin',
     `Audit finished: ${report.totals.errors} error(s), ${report.totals.warnings} warning(s)`

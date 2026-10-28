@@ -41,6 +41,7 @@ the page locks it again.
 | `url-scheme` | warning | A URL is not served over https. |
 | `foreign-content` | warning | The name or description mentions another cloud provider. |
 | `icon-not-found` | warning | The declared icon file does not exist under `public/`. |
+| `orphan-snippet` | warning | A file of `public/<provider>/code/{terraform,bicep,arm}/` matches no id (or has the wrong extension): the resource was renamed or deleted, and the file is never read. File names are case sensitive on Linux. |
 | `missing-icon` | notice | No icon declared: the cell uses the default icon. |
 | `missing-terraform-code` | notice | No Terraform snippet. |
 | `missing-pricing`, `missing-portal` | notice | No pricing or console URL. |

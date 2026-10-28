@@ -33,8 +33,13 @@ function iconExists(_provider, iconPath) {
   return iconCache.get(iconPath);
 }
 
+function listSnippetFiles(provider, language) {
+  const directory = path.join(ROOT, 'public', provider, 'code', language);
+  return fs.existsSync(directory) ? fs.readdirSync(directory) : [];
+}
+
 const { auditProviders } = loadDataAudit();
-const report = auditProviders({ iconExists });
+const report = auditProviders({ iconExists, listSnippetFiles });
 
 const providerFilter = option('provider');
 const findings = providerFilter

@@ -26,7 +26,12 @@ const iconExists = (_provider, iconPath) => {
   return iconCache.get(iconPath);
 };
 
-const report = auditProviders({ iconExists });
+const listSnippetFiles = (provider, language) => {
+  const directory = path.join(ROOT, 'public', provider, 'code', language);
+  return fs.existsSync(directory) ? fs.readdirSync(directory) : [];
+};
+
+const report = auditProviders({ iconExists, listSnippetFiles });
 const allItems = Object.entries(providerDatasets).flatMap(([provider, data]) =>
   data.columns.flatMap((column) => column.items.map((item) => ({ provider, item })))
 );
@@ -127,4 +132,34 @@ test('the audit reports a duplicate id when there is one', () => {
   } finally {
     delete providerDatasets.__test__;
   }
+});
+
+test('the audit reports snippet files that match no resource id', () => {
+  const [provider] = Object.keys(providerDatasets);
+  const { id } = providerDatasets[provider].columns[0].items[0];
+  const files = {
+    terraform: [`${id}.tf`, 'renamed-resource.tf'],
+    bicep: [`${id}.json`],
+    arm: [],
+  };
+
+  const orphans = auditProviders({
+    listSnippetFiles: (current, language) =>
+      current === provider ? files[language] : [],
+  }).findings.filter((finding) => finding.rule === 'orphan-snippet');
+
+  assert.deepEqual(
+    orphans.map((finding) => finding.message.match(/code\/(\S+)"/)[1]).sort(),
+    // A file with the wrong extension is never read either.
+    [`bicep/${id}.json`, 'terraform/renamed-resource.tf']
+  );
+  assert.ok(orphans.every((finding) => finding.severity === 'warning'));
+  assert.ok(orphans.every((finding) => finding.provider === provider));
+});
+
+test('the snippet files on disk all belong to a resource', () => {
+  const orphans = report.findings.filter(
+    (finding) => finding.rule === 'orphan-snippet'
+  );
+  assert.deepEqual(orphans.map((finding) => finding.message), []);
 });

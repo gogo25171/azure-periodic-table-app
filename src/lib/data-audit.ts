@@ -96,12 +96,27 @@ const EXPECTED_FIELDS: (keyof Item)[] = [
 
 const KNOWN_CATEGORIES = new Set<string>(Object.values(Categories));
 
+/**
+ * Snippet directories under public/<provider>/code/ and the extension the
+ * resource route reads there: public/<provider>/code/<language>/<id>.<ext>.
+ */
+export const SNIPPET_EXTENSIONS: Record<string, string> = {
+  terraform: '.tf',
+  bicep: '.bicep',
+  arm: '.json',
+};
+
 export type AuditOptions = {
   /**
    * Returns false when the icon file cannot be found on disk. Only the server
    * can answer that, so the check is skipped when the callback is absent.
    */
   iconExists?: (provider: string, iconPath: string) => boolean;
+  /**
+   * Lists the file names of public/<provider>/code/<language>/ (empty when the
+   * directory does not exist). Skipped like `iconExists` when absent.
+   */
+  listSnippetFiles?: (provider: string, language: string) => string[];
 };
 
 export function auditProviders(options: AuditOptions = {}): AuditReport {
@@ -284,6 +299,27 @@ export function auditProviders(options: AuditOptions = {}): AuditReport {
 
       if (!item.portalUrl) {
         push('info', 'missing-portal', item, 'No portal/console URL.');
+      }
+    }
+
+    // A snippet whose name matches no id is never read: the resource was
+    // renamed or deleted and the collector left its file behind.
+    if (options.listSnippetFiles) {
+      const ids = new Set(items.map((item) => item.id));
+      for (const [language, extension] of Object.entries(SNIPPET_EXTENSIONS)) {
+        for (const file of options.listSnippetFiles(provider, language)) {
+          const id = file.endsWith(extension)
+            ? file.slice(0, -extension.length)
+            : null;
+          if (id !== null && ids.has(id)) continue;
+          push(
+            'warning',
+            'orphan-snippet',
+            null,
+            `Snippet file "public/${provider}/code/${language}/${file}" matches no resource id ` +
+              `(expected <id>${extension}): renamed or deleted resource?`
+          );
+        }
       }
     }
 

@@ -10,7 +10,7 @@
   > Aujourd'hui la page s'affiche toujours et l'API répond 503 sans mot de passe. Cible : sans `ADMIN_PASSWORD`, `/admin` **et** `/api/admin/*` répondent 404, comme si la route n'existait pas.
   > **Implémentation** : `src/app/admin/page.tsx` est un composant client → le renommer en `admin-dashboard.tsx` et créer un `page.tsx` serveur qui appelle `notFound()` quand `process.env.ADMIN_PASSWORD` est vide, sinon rend le dashboard. Dans `api/admin/audit/route.ts`, remplacer les 503 par des 404 (GET et POST). Éviter un `middleware.ts` : il tourne sur le runtime edge, où la lecture des variables serveur au runtime est moins fiable en auto-hébergé (Docker). Mettre à jour `.env.example`, `docs/features/admin.md`, `docs/getting-started/3-configuration.md` et `docs/reference/environment-variables.md`.
 
-- [ ] **2. Détecter les snippets orphelins (fichier sans ressource).**
+- [x] **2. Détecter les snippets orphelins (fichier sans ressource).**
   > Nouvelle règle `orphan-snippet` (warning) dans `src/lib/data-audit.ts` : tout fichier de `public/<provider>/code/{terraform,bicep,arm}/` dont le nom ne correspond à aucun `id` du dataset (ressource renommée ou supprimée). `data-audit.ts` reste pur : la liste des fichiers lui est injectée comme `iconExists` (nouvelle option `listSnippetFiles`), fournie par la route admin et par `scripts/validate-data.mjs`. Ajouter un test dans `tests/`.
 
 - [ ] **3. Tracer la version du provider Terraform utilisée à chaque collecte.**
