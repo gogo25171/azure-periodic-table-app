@@ -15,8 +15,10 @@ Restart the server and open <http://localhost:3000/admin>.
 
 !!! danger "Server side variable"
     `ADMIN_PASSWORD` must **not** be prefixed with `NEXT_PUBLIC_`, otherwise it
-    would be shipped in the browser bundle. When the variable is missing, the
-    route answers `503` and the dashboard stays locked — that is the default.
+    would be shipped in the browser bundle. When the variable is missing,
+    `/admin` and `/api/admin/*` answer `404` as if they did not exist — that
+    is the default. The variable is read on every request, so setting it on a
+    running container only needs a restart, not a rebuild.
 
 The password is posted to `/api/admin/audit`, compared server side, and the
 report is computed there as well. There is no session and no cookie: closing

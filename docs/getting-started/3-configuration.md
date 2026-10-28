@@ -76,8 +76,8 @@ Defaults to `info` in development and `warn` in production.
 ADMIN_PASSWORD=a-long-random-password
 ```
 
-Leaving it empty keeps `/admin` disabled: the API route answers `503` and never
-runs the checks. See [Admin dashboard](../features/admin.md).
+Leaving it empty disables the dashboard: `/admin` and `/api/admin/*` answer
+`404` and never run the checks. See [Admin dashboard](../features/admin.md).
 
 ## AI chat
 

@@ -30,11 +30,15 @@ function passwordMatches(candidate: string, expected: string): boolean {
   return diff === 0;
 }
 
+/** Without ADMIN_PASSWORD the admin API answers as if it did not exist. */
+function notFound() {
+  return NextResponse.json({ error: 'not-found' }, { status: 404 });
+}
+
 /** Tells the client whether the admin interface is usable at all. */
 export async function GET() {
-  return NextResponse.json({
-    configured: Boolean(process.env.ADMIN_PASSWORD),
-  });
+  if (!process.env.ADMIN_PASSWORD) return notFound();
+  return NextResponse.json({ configured: true });
 }
 
 export async function POST(request: Request) {
@@ -42,7 +46,7 @@ export async function POST(request: Request) {
 
   if (!expected) {
     logger.warn('admin', 'ADMIN_PASSWORD is not set, refusing the audit');
-    return NextResponse.json({ error: 'not-configured' }, { status: 503 });
+    return notFound();
   }
 
   let password = '';

@@ -6,7 +6,7 @@
 
 > **Consigne** : c'est le prochain chantier. Quand je demande « qu'est-ce qu'il faut faire ? », on fait ce bloc dans l'ordre, puis on commit (un commit par étape, `yarn verify` vert à chaque fois).
 
-- [ ] **1. `/admin` actif seulement si `ADMIN_PASSWORD` est défini, sinon 404 (en dev comme en prod).**
+- [x] **1. `/admin` actif seulement si `ADMIN_PASSWORD` est défini, sinon 404 (en dev comme en prod).**
   > Aujourd'hui la page s'affiche toujours et l'API répond 503 sans mot de passe. Cible : sans `ADMIN_PASSWORD`, `/admin` **et** `/api/admin/*` répondent 404, comme si la route n'existait pas.
   > **Implémentation** : `src/app/admin/page.tsx` est un composant client → le renommer en `admin-dashboard.tsx` et créer un `page.tsx` serveur qui appelle `notFound()` quand `process.env.ADMIN_PASSWORD` est vide, sinon rend le dashboard. Dans `api/admin/audit/route.ts`, remplacer les 503 par des 404 (GET et POST). Éviter un `middleware.ts` : il tourne sur le runtime edge, où la lecture des variables serveur au runtime est moins fiable en auto-hébergé (Docker). Mettre à jour `.env.example`, `docs/features/admin.md`, `docs/getting-started/3-configuration.md` et `docs/reference/environment-variables.md`.
 

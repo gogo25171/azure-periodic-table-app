@@ -35,7 +35,7 @@ falls back to the default.
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `ADMIN_PASSWORD` | *(empty)* | Password of the `/admin` dashboard. Empty means disabled. |
+| `ADMIN_PASSWORD` | *(empty)* | Password of the `/admin` dashboard. Empty means disabled: `/admin` and `/api/admin/*` answer 404. |
 | `OPENAI_API_KEY` | *(empty)* | Needed by the AI chat when `ENABLE_CHAT` is `true`. |
 | `GA_TRACKING_ID` | *(empty)* | Google Analytics measurement id. |
 
