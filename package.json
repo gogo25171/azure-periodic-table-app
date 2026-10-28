@@ -30,6 +30,7 @@
     "add:resource": "node scripts/add-resource.mjs",
     "add:provider": "node scripts/add-provider.mjs",
     "update:credits": "node scripts/update-credits.mjs",
+    "icons:sync": "node scripts/sync-icons.mjs",
     "hooks:install": "git config core.hooksPath .githooks",
     "docs:serve": "mkdocs serve",
     "docs:build": "mkdocs build"

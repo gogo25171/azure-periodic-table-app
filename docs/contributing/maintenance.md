@@ -74,9 +74,12 @@ of `azure.ts`) rather than the generated file.
 
 ## 6. Icons
 
-Only the Azure icon pack is bundled. When an icon pack is updated or added,
-map the new files in the `icon` field of the resources and run
-`yarn validate:data` to catch broken paths.
+- `yarn icons:sync --update` picks up the latest theSVG release; map new AWS
+  and Google Cloud resources in `scripts/icon-map.json` first (the script
+  lists the resources without an icon).
+- OVHcloud and Scaleway have no icon pack yet: look again for an open source
+  one.
+- Run `yarn validate:data` to catch broken paths.
 
 ## 7. Dependencies
 

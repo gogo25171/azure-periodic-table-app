@@ -5,7 +5,7 @@
 ### Prochaines demandes (2026-10-28)
 
 - [ ] **Ressources manquantes** : passer les catalogues en revue et ajouter ce qui manque, en commençant par **Azure AI Foundry** (qui absorbe Azure OpenAI et AI Studio : `azurerm_ai_foundry`, `azurerm_ai_foundry_project`), puis les autres services récents de chaque provider. Pour les renommages, garder l'id existant et changer le nom.
-- [ ] **Icônes des autres providers via un sous-module git** : chercher des packs d'icônes officiels et open source sur GitHub (AWS Architecture Icons, Google Cloud icons, OVHcloud, Scaleway), vérifier leur licence, les brancher en `git submodule` sous `public/<provider>/icons/`, puis renseigner le champ `icon` des ressources.
+- [x] **Icônes des autres providers via un sous-module git** — fait pour AWS (72/72) et Google Cloud (34/36, pas d'icône AlloyDB ni Workstations) : `vendor/thesvg` + `yarn icons:sync`. **Reste OVHcloud et Scaleway** : pas de pack open source trouvé (OVHcloud a un Brand Hub officiel hors GitHub, à vérifier côté licence). : chercher des packs d'icônes officiels et open source sur GitHub (AWS Architecture Icons, Google Cloud icons, OVHcloud, Scaleway), vérifier leur licence, les brancher en `git submodule` sous `public/<provider>/icons/`, puis renseigner le champ `icon` des ressources.
 - [ ] **Autres formats d'affichage** : en plus du tableau périodique, une vue **mindmap** (le provider au centre, une boîte par catégorie avec un sous-titre d'une ligne, ses ressources listées avec leur icône), comme le « AWS Cloud Mindmap » de LinkedIn. Même données, seul le rendu change : un sélecteur de vue dans la barre d'outils. La vue mindmap rend aussi l'export PNG plus lisible pour partager.
 - [ ] **Doc : visite guidée annotée** : captures de l'interface avec des repères numérotés et leur légende (façon notice d'appareil), générées par un script pour pouvoir les refaire quand l'interface change.
 
@@ -94,6 +94,7 @@
   > Tous ceux entre parenthèses ont un provider Terraform officiel, donc `yarn add:provider` + le collecteur de snippets fonctionnent directement. Commencer par Hetzner et DigitalOcean : petits catalogues (~20 ressources) et doc très propre.
 
 - [ ] Ajouter les packs d'icônes pour AWS, Google Cloud, OVHcloud et Scaleway (`public/<provider>/icons/<Catégorie>/`), puis renseigner le champ `icon` des ressources. Aujourd'hui seul Azure a ses icônes ; les autres tombent sur `default-icon.svg`.
+  > **Fait pour AWS et Google Cloud** (voir « Icônes des autres providers via un sous-module git » plus haut) ; reste OVHcloud et Scaleway.
 
 - [ ] Publier le TODO dans la documentation MkDocs, mais avec de vrais visuels.
   > **Note** : une liste de cases à cocher brute n'apporte rien de plus que le fichier `TODO.md` du dépôt. Ce qui vaudrait le coup : une page « Roadmap » avec (a) un diagramme Mermaid `gantt` ou `timeline` des chantiers (Mermaid est déjà activé dans MkDocs via `pymdownx.superfences`), (b) des cartes Material (`grid cards`) par chantier avec statut et effort estimé, (c) des badges d'état, et (d) éventuellement les compteurs réels (ressources par provider, erreurs de données) générés automatiquement depuis `yarn validate:data --json` au moment du build.

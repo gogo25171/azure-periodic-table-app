@@ -12,3 +12,4 @@ coverage
 .env.*
 !.env.example
 python/__pycache__
+vendor

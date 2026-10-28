@@ -36,9 +36,30 @@ renders its cells with no background.
 ## Icons
 
 Icons are resolved from `public/<provider>/icons/<Category>/<file>` through the
-`icon` field of each resource. Only the Azure icon pack is bundled today; the
-other providers declare an empty `icon` and their cells fall back to
+`icon` field of each resource. A resource without an icon falls back to
 `public/default-icon.svg`.
+
+| Provider | Source |
+| --- | --- |
+| Azure | Microsoft Azure architecture icons, bundled in `public/azure/icons/` |
+| AWS, Google Cloud | [theSVG](https://github.com/glincker/thesvg), through the `vendor/thesvg` git submodule |
+| OVHcloud, Scaleway | none yet: no open source product icon set was found |
+
+AWS and Google Cloud icons are mapped by hand in `scripts/icon-map.json`
+(resource id → theSVG slug; sub-resources such as a subnet use their parent
+service icon), then copied by:
+
+```bash
+yarn icons:sync             # copy the mapped icons, write the `icon` fields
+yarn icons:sync --dry-run   # show what would change
+yarn icons:sync --update    # first move the submodule to the latest theSVG
+```
+
+Only the copied files ship with the app. The submodule is checked out
+sparsely (the AWS and Google Cloud icons only, about 3 MB instead of 57 MB);
+the script sets that up itself on a fresh clone, so a plain
+`git submodule update --init` is not needed. Licences are listed in the
+[credits](../about/credits.md) and in `public/<provider>/icons/NOTICE.md`.
 
 ## Code snippets
 

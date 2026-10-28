@@ -63,7 +63,7 @@ export const columns: ColumnType[] = [
         resource: 'google_compute_instance',
         entity: 'instances',
         scope: 'zone',
-        icon: '',
+        icon: '/google/icons/Compute and Web/gcp-compute-engine.svg',
         terraformCode: `resource "google_compute_instance" "main" {
   name         = "gce-main"
   machine_type = "e2-medium"
@@ -98,7 +98,7 @@ export const columns: ColumnType[] = [
         resource: 'google_cloud_run_v2_service',
         entity: 'services',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/Containers/gcp-cloud-run.svg',
         terraformCode: `resource "google_cloud_run_v2_service" "main" {
   name     = "cr-main"
   location = "europe-west1"
@@ -128,7 +128,7 @@ export const columns: ColumnType[] = [
         resource: 'google_cloudfunctions2_function',
         entity: 'functions',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/Compute and Web/gcp-cloud-functions.svg',
         terraformCode: `resource "google_cloudfunctions2_function" "main" {
   name     = "func-main"
   location = "europe-west1"
@@ -170,7 +170,7 @@ export const columns: ColumnType[] = [
         resource: 'google_app_engine_application',
         entity: 'applications',
         scope: 'project',
-        icon: '',
+        icon: '/google/icons/Compute and Web/gcp-app-engine.svg',
         terraformCode: `resource "google_app_engine_application" "main" {
   project     = var.project_id
   location_id = "europe-west"
@@ -193,7 +193,7 @@ export const columns: ColumnType[] = [
         resource: 'google_compute_instance_group_manager',
         entity: 'instanceGroupManagers',
         scope: 'zone',
-        icon: '',
+        icon: '/google/icons/Compute and Web/gcp-compute-engine.svg',
         terraformCode: `resource "google_compute_instance_group_manager" "main" {
   name               = "mig-main"
   base_instance_name = "gce-main"
@@ -253,7 +253,7 @@ export const columns: ColumnType[] = [
         resource: 'google_container_cluster',
         entity: 'clusters',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/Containers/gcp-google-kubernetes-engine.svg',
         terraformCode: `resource "google_container_cluster" "main" {
   name     = "gke-main"
   location = "europe-west1"
@@ -280,7 +280,7 @@ export const columns: ColumnType[] = [
         resource: 'google_container_node_pool',
         entity: 'nodePools',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/Containers/gcp-google-kubernetes-engine.svg',
         terraformCode: `resource "google_container_node_pool" "main" {
   name       = "gkenp-main"
   cluster    = google_container_cluster.main.id
@@ -308,7 +308,7 @@ export const columns: ColumnType[] = [
         resource: 'google_artifact_registry_repository',
         entity: 'repositories',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/Containers/gcp-artifact-registry.svg',
         terraformCode: `resource "google_artifact_registry_repository" "main" {
   repository_id = "ar-main"
   location      = "europe-west1"
@@ -333,7 +333,7 @@ export const columns: ColumnType[] = [
         resource: 'google_storage_bucket',
         entity: 'buckets',
         scope: 'global',
-        icon: '',
+        icon: '/google/icons/Storage/gcp-cloud-storage.svg',
         terraformCode: `resource "google_storage_bucket" "main" {
   name                        = "gcs-main-\${var.project_id}"
   location                    = "EU"
@@ -361,7 +361,7 @@ export const columns: ColumnType[] = [
         resource: 'google_compute_disk',
         entity: 'disks',
         scope: 'zone',
-        icon: '',
+        icon: '/google/icons/Storage/gcp-persistent-disk.svg',
         terraformCode: `resource "google_compute_disk" "main" {
   name = "pd-main"
   type = "pd-balanced"
@@ -387,7 +387,7 @@ export const columns: ColumnType[] = [
         resource: 'google_filestore_instance',
         entity: 'instances',
         scope: 'zone',
-        icon: '',
+        icon: '/google/icons/Storage/gcp-filestore.svg',
         terraformCode: `resource "google_filestore_instance" "main" {
   name     = "fsi-main"
   location = "europe-west1-b"
@@ -426,7 +426,7 @@ export const columns: ColumnType[] = [
         resource: 'google_sql_database_instance',
         entity: 'instances',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/Databases/gcp-cloud-sql.svg',
         terraformCode: `resource "google_sql_database_instance" "main" {
   name             = "csql-main"
   database_version = "POSTGRES_16"
@@ -483,7 +483,7 @@ export const columns: ColumnType[] = [
         resource: 'google_firestore_database',
         entity: 'databases',
         scope: 'project',
-        icon: '',
+        icon: '/google/icons/Databases/gcp-firestore.svg',
         terraformCode: `resource "google_firestore_database" "main" {
   project     = var.project_id
   name        = "(default)"
@@ -509,7 +509,7 @@ export const columns: ColumnType[] = [
         resource: 'google_bigtable_instance',
         entity: 'instances',
         scope: 'project',
-        icon: '',
+        icon: '/google/icons/Databases/gcp-bigtable.svg',
         terraformCode: `resource "google_bigtable_instance" "main" {
   name = "bt-main-instance"
 
@@ -539,7 +539,7 @@ export const columns: ColumnType[] = [
         resource: 'google_spanner_instance',
         entity: 'instances',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/Databases/gcp-cloud-spanner.svg',
         terraformCode: `resource "google_spanner_instance" "main" {
   name         = "spn-main"
   config       = "regional-europe-west1"
@@ -565,7 +565,7 @@ export const columns: ColumnType[] = [
         resource: 'google_redis_instance',
         entity: 'instances',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/Databases/gcp-memorystore.svg',
         terraformCode: `resource "google_redis_instance" "main" {
   name           = "mem-main"
   memory_size_gb = 1
@@ -595,7 +595,7 @@ export const columns: ColumnType[] = [
         resource: 'google_compute_network',
         entity: 'networks',
         scope: 'global',
-        icon: '',
+        icon: '/google/icons/Networking/gcp-virtual-private-cloud.svg',
         terraformCode: `resource "google_compute_network" "main" {
   name                    = "vpc-main"
   auto_create_subnetworks = false
@@ -618,7 +618,7 @@ export const columns: ColumnType[] = [
         resource: 'google_compute_subnetwork',
         entity: 'subnetworks',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/Networking/gcp-virtual-private-cloud.svg',
         terraformCode: `resource "google_compute_subnetwork" "main" {
   name          = "snet-main"
   network       = google_compute_network.main.id
@@ -643,7 +643,7 @@ export const columns: ColumnType[] = [
         resource: 'google_compute_firewall',
         entity: 'firewalls',
         scope: 'global',
-        icon: '',
+        icon: '/google/icons/Networking/gcp-cloud-firewall-rules.svg',
         terraformCode: `resource "google_compute_firewall" "main" {
   name    = "fw-main"
   network = google_compute_network.main.name
@@ -673,7 +673,7 @@ export const columns: ColumnType[] = [
         resource: 'google_compute_forwarding_rule',
         entity: 'forwardingRules',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/Networking/gcp-cloud-load-balancing.svg',
         terraformCode: `resource "google_compute_forwarding_rule" "main" {
   name       = "clb-main"
   region     = "europe-west1"
@@ -699,7 +699,7 @@ export const columns: ColumnType[] = [
         resource: 'google_dns_managed_zone',
         entity: 'managedZones',
         scope: 'project',
-        icon: '',
+        icon: '/google/icons/Networking/gcp-cloud-dns.svg',
         terraformCode: `resource "google_dns_managed_zone" "main" {
   name     = "dns-main"
   dns_name = "example.com."
@@ -722,7 +722,7 @@ export const columns: ColumnType[] = [
         resource: 'google_compute_router_nat',
         entity: 'routerNats',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/Networking/gcp-cloud-nat.svg',
         terraformCode: `resource "google_compute_router_nat" "main" {
   name   = "nat-main"
   router = google_compute_router.main.name
@@ -753,7 +753,7 @@ export const columns: ColumnType[] = [
         resource: 'google_bigquery_dataset',
         entity: 'datasets',
         scope: 'project',
-        icon: '',
+        icon: '/google/icons/Analytics and IoT/gcp-bigquery.svg',
         terraformCode: `resource "google_bigquery_dataset" "main" {
   dataset_id                  = "bq_main"
   location                    = "EU"
@@ -778,7 +778,7 @@ export const columns: ColumnType[] = [
         resource: 'google_pubsub_topic',
         entity: 'topics',
         scope: 'project',
-        icon: '',
+        icon: '/google/icons/Integration/gcp-pubsub.svg',
         terraformCode: `resource "google_pubsub_topic" "main" {
   name = "ps-main"
 
@@ -803,7 +803,7 @@ export const columns: ColumnType[] = [
         resource: 'google_dataflow_job',
         entity: 'jobs',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/Analytics and IoT/gcp-dataflow.svg',
         terraformCode: `resource "google_dataflow_job" "main" {
   name              = "df-main"
   template_gcs_path = "gs://dataflow-templates/latest/Word_Count"
@@ -829,7 +829,7 @@ export const columns: ColumnType[] = [
         resource: 'google_dataproc_cluster',
         entity: 'clusters',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/Analytics and IoT/gcp-dataproc.svg',
         terraformCode: `resource "google_dataproc_cluster" "main" {
   name   = "dp-main"
   region = "europe-west1"
@@ -859,7 +859,7 @@ export const columns: ColumnType[] = [
         resource: 'google_vertex_ai_endpoint',
         entity: 'endpoints',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/AI and ML/gcp-vertexai.svg',
         terraformCode: `resource "google_vertex_ai_endpoint" "main" {
   name         = "vai-main"
   display_name = "Main prediction endpoint"
@@ -884,7 +884,7 @@ export const columns: ColumnType[] = [
         resource: 'google_cloudbuild_trigger',
         entity: 'triggers',
         scope: 'project',
-        icon: '',
+        icon: '/google/icons/Dev Tools/gcp-cloud-build.svg',
         terraformCode: `resource "google_cloudbuild_trigger" "main" {
   name     = "cbt-main"
   location = "europe-west1"
@@ -921,7 +921,7 @@ export const columns: ColumnType[] = [
         resource: 'google_project_iam_member',
         entity: 'iamPolicies',
         scope: 'project',
-        icon: '',
+        icon: '/google/icons/Management/gcp-identity-and-access-management.svg',
         terraformCode: `resource "google_project_iam_member" "main" {
   project = var.project_id
   role    = "roles/viewer"
@@ -946,7 +946,7 @@ export const columns: ColumnType[] = [
         resource: 'google_service_account',
         entity: 'serviceAccounts',
         scope: 'project',
-        icon: '',
+        icon: '/google/icons/Management/gcp-identity-and-access-management.svg',
         terraformCode: `resource "google_service_account" "main" {
   account_id   = "sa-main"
   display_name = "Main workload identity"
@@ -969,7 +969,7 @@ export const columns: ColumnType[] = [
         resource: 'google_kms_crypto_key',
         entity: 'cryptoKeys',
         scope: 'region',
-        icon: '',
+        icon: '/google/icons/Management/gcp-key-management-service.svg',
         terraformCode: `resource "google_kms_crypto_key" "main" {
   name            = "kms-main"
   key_ring        = google_kms_key_ring.main.id
@@ -993,7 +993,7 @@ export const columns: ColumnType[] = [
         resource: 'google_secret_manager_secret',
         entity: 'secrets',
         scope: 'project',
-        icon: '',
+        icon: '/google/icons/Management/gcp-secret-manager.svg',
         terraformCode: `resource "google_secret_manager_secret" "main" {
   secret_id = "sec-main"
 
@@ -1019,7 +1019,7 @@ export const columns: ColumnType[] = [
         resource: 'google_logging_project_sink',
         entity: 'sinks',
         scope: 'project',
-        icon: '',
+        icon: '/google/icons/Management/gcp-cloud-logging.svg',
         terraformCode: `resource "google_logging_project_sink" "main" {
   name        = "sink-main"
   destination = "storage.googleapis.com/\${google_storage_bucket.main.name}"
@@ -1045,7 +1045,7 @@ export const columns: ColumnType[] = [
         resource: 'google_monitoring_alert_policy',
         entity: 'alertPolicies',
         scope: 'project',
-        icon: '',
+        icon: '/google/icons/Management/gcp-cloud-monitoring.svg',
         terraformCode: `resource "google_monitoring_alert_policy" "main" {
   display_name = "alert-main"
   combiner     = "OR"

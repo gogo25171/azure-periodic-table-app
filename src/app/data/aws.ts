@@ -63,7 +63,7 @@ export const columns: ColumnType[] = [
         resource: 'aws_instance',
         entity: 'instances',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Compute and Web/aws-amazon-ec2.svg',
         terraformCode: `resource "aws_instance" "main" {
   ami           = "ami-0c02fb55956c7d316"
   instance_type = "t3.micro"
@@ -90,7 +90,7 @@ export const columns: ColumnType[] = [
         resource: 'aws_lambda_function',
         entity: 'functions',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Compute and Web/aws-aws-lambda.svg',
         terraformCode: `resource "aws_lambda_function" "main" {
   function_name = "lambda-main"
   role          = aws_iam_role.lambda.arn
@@ -116,7 +116,7 @@ export const columns: ColumnType[] = [
         resource: 'aws_autoscaling_group',
         entity: 'autoScalingGroups',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Compute and Web/aws-amazon-ec2-auto-scaling.svg',
         terraformCode: `resource "aws_autoscaling_group" "main" {
   name                = "asg-main"
   min_size            = 1
@@ -147,7 +147,7 @@ export const columns: ColumnType[] = [
         resource: 'aws_elastic_beanstalk_application',
         entity: 'applications',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Compute and Web/aws-aws-elastic-beanstalk.svg',
         terraformCode: `resource "aws_elastic_beanstalk_application" "main" {
   name        = "eb-main"
   description = "Managed application platform"
@@ -170,7 +170,7 @@ export const columns: ColumnType[] = [
         resource: 'aws_apprunner_service',
         entity: 'services',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Compute and Web/aws-aws-app-runner.svg',
         terraformCode: `resource "aws_apprunner_service" "main" {
   service_name = "apprunner-main"
 
@@ -199,7 +199,7 @@ export const columns: ColumnType[] = [
         resource: 'aws_batch_job_queue',
         entity: 'jobQueues',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Compute and Web/aws-aws-batch.svg',
         terraformCode: `resource "aws_batch_job_queue" "main" {
   name     = "batch-main"
   state    = "ENABLED"
@@ -232,7 +232,7 @@ export const columns: ColumnType[] = [
         resource: 'aws_ecs_cluster',
         entity: 'clusters',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Containers/aws-amazon-elastic-container-service.svg',
         terraformCode: `resource "aws_ecs_cluster" "main" {
   name = "ecs-main"
 
@@ -260,7 +260,7 @@ export const columns: ColumnType[] = [
         resource: 'aws_ecs_service',
         entity: 'services',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Containers/aws-amazon-elastic-container-service.svg',
         terraformCode: `resource "aws_ecs_service" "main" {
   name            = "ecssvc-main"
   cluster         = aws_ecs_cluster.main.id
@@ -287,7 +287,7 @@ export const columns: ColumnType[] = [
         resource: 'aws_ecs_task_definition',
         entity: 'taskDefinitions',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Containers/aws-amazon-elastic-container-service.svg',
         terraformCode: `resource "aws_ecs_task_definition" "main" {
   family                   = "ecstask-main"
   requires_compatibilities = ["FARGATE"]
@@ -321,7 +321,7 @@ export const columns: ColumnType[] = [
         resource: 'aws_eks_cluster',
         entity: 'clusters',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Containers/aws-amazon-elastic-kubernetes-service.svg',
         terraformCode: `resource "aws_eks_cluster" "main" {
   name     = "eks-main"
   role_arn = aws_iam_role.eks.arn
@@ -350,7 +350,7 @@ export const columns: ColumnType[] = [
         resource: 'aws_eks_node_group',
         entity: 'nodegroups',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Containers/aws-amazon-elastic-kubernetes-service.svg',
         terraformCode: `resource "aws_eks_node_group" "main" {
   cluster_name    = aws_eks_cluster.main.name
   node_group_name = "eksng-main"
@@ -382,7 +382,7 @@ export const columns: ColumnType[] = [
         resource: 'aws_ecr_repository',
         entity: 'repositories',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Containers/aws-amazon-elastic-container-registry.svg',
         terraformCode: `resource "aws_ecr_repository" "main" {
   name                 = "ecr-main"
   image_tag_mutability = "IMMUTABLE"
@@ -414,7 +414,7 @@ export const columns: ColumnType[] = [
         resource: 'aws_s3_bucket',
         entity: 'buckets',
         scope: 'global',
-        icon: '',
+        icon: '/aws/icons/Storage/aws-amazon-simple-storage-service.svg',
         terraformCode: `resource "aws_s3_bucket" "main" {
   bucket = "s3-main-\${data.aws_caller_identity.current.account_id}"
 }
@@ -444,7 +444,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_ebs_volume',
         entity: 'volumes',
         scope: 'availability zone',
-        icon: '',
+        icon: '/aws/icons/Storage/aws-amazon-elastic-block-store.svg',
         terraformCode: `resource "aws_ebs_volume" "main" {
   availability_zone = "us-east-1a"
   size              = 20
@@ -473,7 +473,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_efs_file_system',
         entity: 'fileSystems',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Storage/aws-amazon-efs.svg',
         terraformCode: `resource "aws_efs_file_system" "main" {
   creation_token = "efs-main"
   encrypted      = true
@@ -500,7 +500,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_fsx_lustre_file_system',
         entity: 'fileSystems',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Storage/aws-amazon-fsx-for-lustre.svg',
         terraformCode: `resource "aws_fsx_lustre_file_system" "main" {
   storage_capacity    = 1200
   subnet_ids          = [aws_subnet.main.id]
@@ -529,7 +529,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_backup_vault',
         entity: 'backupVaults',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Storage/aws-aws-backup.svg',
         terraformCode: `resource "aws_backup_vault" "main" {
   name        = "bkv-main"
   kms_key_arn = aws_kms_key.main.arn
@@ -552,7 +552,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_glacier_vault',
         entity: 'vaults',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Storage/aws-amazon-simple-storage-service-glacier.svg',
         terraformCode: `resource "aws_glacier_vault" "main" {
   name = "glacier-main"
 }`,
@@ -579,7 +579,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_db_instance',
         entity: 'dbInstances',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Databases/aws-amazon-rds.svg',
         terraformCode: `resource "aws_db_instance" "main" {
   identifier           = "rds-main"
   engine               = "postgres"
@@ -610,7 +610,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_rds_cluster',
         entity: 'dbClusters',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Databases/aws-amazon-aurora.svg',
         terraformCode: `resource "aws_rds_cluster" "main" {
   cluster_identifier = "aurora-main"
   engine             = "aurora-postgresql"
@@ -642,7 +642,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_dynamodb_table',
         entity: 'tables',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Databases/aws-amazon-dynamodb.svg',
         terraformCode: `resource "aws_dynamodb_table" "main" {
   name         = "ddb-main"
   billing_mode = "PAY_PER_REQUEST"
@@ -672,7 +672,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_elasticache_cluster',
         entity: 'cacheClusters',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Databases/aws-amazon-elasticache.svg',
         terraformCode: `resource "aws_elasticache_cluster" "main" {
   cluster_id           = "ec-main"
   engine               = "redis"
@@ -699,7 +699,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_docdb_cluster',
         entity: 'dbClusters',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Databases/aws-amazon-documentdb.svg',
         terraformCode: `resource "aws_docdb_cluster" "main" {
   cluster_identifier  = "docdb-main"
   engine              = "docdb"
@@ -726,7 +726,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_redshift_cluster',
         entity: 'clusters',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Analytics and IoT/aws-amazon-redshift.svg',
         terraformCode: `resource "aws_redshift_cluster" "main" {
   cluster_identifier  = "rs-main"
   database_name       = "analytics"
@@ -758,7 +758,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_vpc',
         entity: 'vpcs',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Networking/aws-amazon-virtual-private-cloud.svg',
         terraformCode: `resource "aws_vpc" "main" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
@@ -786,7 +786,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_subnet',
         entity: 'subnets',
         scope: 'availability zone',
-        icon: '',
+        icon: '/aws/icons/Networking/aws-amazon-virtual-private-cloud.svg',
         terraformCode: `resource "aws_subnet" "main" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.1.0/24"
@@ -816,7 +816,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_security_group',
         entity: 'securityGroups',
         scope: 'vpc',
-        icon: '',
+        icon: '/aws/icons/Networking/aws-amazon-virtual-private-cloud.svg',
         terraformCode: `resource "aws_security_group" "main" {
   name   = "sg-main"
   vpc_id = aws_vpc.main.id
@@ -847,7 +847,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_lb',
         entity: 'loadBalancers',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Networking/aws-elastic-load-balancing.svg',
         terraformCode: `resource "aws_lb" "main" {
   name               = "alb-main"
   load_balancer_type = "application"
@@ -873,7 +873,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_cloudfront_distribution',
         entity: 'distributions',
         scope: 'global',
-        icon: '',
+        icon: '/aws/icons/Networking/aws-amazon-cloudfront.svg',
         terraformCode: `resource "aws_cloudfront_distribution" "main" {
   enabled = true
   comment = "cf-main"
@@ -908,7 +908,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_route53_zone',
         entity: 'hostedZones',
         scope: 'global',
-        icon: '',
+        icon: '/aws/icons/Networking/aws-amazon-route-53.svg',
         terraformCode: `resource "aws_route53_zone" "main" {
   name = "example.com"
 
@@ -939,7 +939,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_nat_gateway',
         entity: 'natGateways',
         scope: 'availability zone',
-        icon: '',
+        icon: '/aws/icons/Networking/aws-amazon-virtual-private-cloud.svg',
         terraformCode: `resource "aws_nat_gateway" "main" {
   allocation_id = aws_eip.main.id
   subnet_id     = aws_subnet.public.id
@@ -966,7 +966,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_ec2_transit_gateway',
         entity: 'transitGateways',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Networking/aws-aws-transit-gateway.svg',
         terraformCode: `resource "aws_ec2_transit_gateway" "main" {
   description = "tgw-main"
 
@@ -992,7 +992,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_apigatewayv2_api',
         entity: 'apis',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Integration/aws-amazon-api-gateway.svg',
         terraformCode: `resource "aws_apigatewayv2_api" "main" {
   name          = "apigw-main"
   protocol_type = "HTTP"
@@ -1016,7 +1016,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_sqs_queue',
         entity: 'queues',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Integration/aws-amazon-simple-queue-service.svg',
         terraformCode: `resource "aws_sqs_queue" "main" {
   name                      = "sqs-main"
   message_retention_seconds = 345600
@@ -1041,7 +1041,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_sns_topic',
         entity: 'topics',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Integration/aws-amazon-simple-notification-service.svg',
         terraformCode: `resource "aws_sns_topic" "main" {
   name = "sns-main"
 }`,
@@ -1064,7 +1064,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_sfn_state_machine',
         entity: 'stateMachines',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Integration/aws-aws-step-functions.svg',
         terraformCode: `resource "aws_sfn_state_machine" "main" {
   name     = "sfn-main"
   role_arn = aws_iam_role.sfn.arn
@@ -1096,7 +1096,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_cloudwatch_event_bus',
         entity: 'eventBuses',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Integration/aws-amazon-eventbridge.svg',
         terraformCode: `resource "aws_cloudwatch_event_bus" "main" {
   name = "eb-bus-main"
 }`,
@@ -1118,7 +1118,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_kinesis_stream',
         entity: 'streams',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Analytics and IoT/aws-amazon-kinesis-data-streams.svg',
         terraformCode: `resource "aws_kinesis_stream" "main" {
   name = "kds-main"
 
@@ -1144,7 +1144,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_msk_cluster',
         entity: 'clusters',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Analytics and IoT/aws-amazon-managed-streaming-for-apache-kafka.svg',
         terraformCode: `resource "aws_msk_cluster" "main" {
   cluster_name           = "msk-main"
   kafka_version          = "3.6.0"
@@ -1180,7 +1180,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_glue_catalog_database',
         entity: 'databases',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Analytics and IoT/aws-aws-glue.svg',
         terraformCode: `resource "aws_glue_catalog_database" "main" {
   name = "glue_main"
 }`,
@@ -1202,7 +1202,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_athena_workgroup',
         entity: 'workGroups',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Analytics and IoT/aws-amazon-athena.svg',
         terraformCode: `resource "aws_athena_workgroup" "main" {
   name = "ath-main"
 
@@ -1231,7 +1231,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_opensearch_domain',
         entity: 'domains',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Analytics and IoT/aws-amazon-opensearch-service.svg',
         terraformCode: `resource "aws_opensearch_domain" "main" {
   domain_name    = "os-main"
   engine_version = "OpenSearch_2.13"
@@ -1267,7 +1267,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_sagemaker_domain',
         entity: 'domains',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/AI and ML/aws-amazon-sagemaker-ai.svg',
         terraformCode: `resource "aws_sagemaker_domain" "main" {
   domain_name = "sm-main"
   auth_mode   = "IAM"
@@ -1297,7 +1297,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_sagemaker_endpoint',
         entity: 'endpoints',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/AI and ML/aws-amazon-sagemaker-ai.svg',
         terraformCode: `resource "aws_sagemaker_endpoint" "main" {
   name                 = "smep-main"
   endpoint_config_name = aws_sagemaker_endpoint_configuration.main.name
@@ -1320,7 +1320,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_bedrock_guardrail',
         entity: 'guardrails',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/AI and ML/aws-amazon-bedrock.svg',
         terraformCode: `resource "aws_bedrock_guardrail" "main" {
   name                      = "brg-main"
   blocked_input_messaging   = "Blocked input"
@@ -1352,7 +1352,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_iot_thing',
         entity: 'things',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Analytics and IoT/aws-aws-iot-core.svg',
         terraformCode: `resource "aws_iot_thing" "main" {
   name = "iot-main"
 
@@ -1379,7 +1379,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_workspaces_workspace',
         entity: 'workspaces',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Virtual Desktop/aws-amazon-workspaces.svg',
         terraformCode: `resource "aws_workspaces_workspace" "main" {
   directory_id = aws_workspaces_directory.main.id
   bundle_id    = data.aws_workspaces_bundle.standard.id
@@ -1408,7 +1408,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_dms_replication_instance',
         entity: 'replicationInstances',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Migration/aws-aws-database-migration-service.svg',
         terraformCode: `resource "aws_dms_replication_instance" "main" {
   replication_instance_id    = "dms-main"
   replication_instance_class = "dms.t3.medium"
@@ -1437,7 +1437,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_iam_role',
         entity: 'roles',
         scope: 'account',
-        icon: '',
+        icon: '/aws/icons/Management/aws-aws-identity-and-access-management.svg',
         terraformCode: `resource "aws_iam_role" "main" {
   name = "role-main"
 
@@ -1469,7 +1469,7 @@ resource "aws_s3_bucket_versioning" "main" {
         resource: 'aws_kms_key',
         entity: 'keys',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Management/aws-aws-key-management-service.svg',
         terraformCode: `resource "aws_kms_key" "main" {
   description         = "kms-main"
   enable_key_rotation = true
@@ -1498,7 +1498,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_secretsmanager_secret',
         entity: 'secrets',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Management/aws-aws-secrets-manager.svg',
         terraformCode: `resource "aws_secretsmanager_secret" "main" {
   name                    = "sec-main"
   recovery_window_in_days = 7
@@ -1522,7 +1522,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_cloudwatch_log_group',
         entity: 'logGroups',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Management/aws-amazon-cloudwatch.svg',
         terraformCode: `resource "aws_cloudwatch_log_group" "main" {
   name              = "/aws/lambda/log-main"
   retention_in_days = 30
@@ -1546,7 +1546,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_cloudtrail',
         entity: 'trails',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Management/aws-aws-cloudtrail.svg',
         terraformCode: `resource "aws_cloudtrail" "main" {
   name                          = "ct-main"
   s3_bucket_name                = aws_s3_bucket.main.id
@@ -1571,7 +1571,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_organizations_organizational_unit',
         entity: 'organizationalUnits',
         scope: 'organization',
-        icon: '',
+        icon: '/aws/icons/General/aws-aws-organizations.svg',
         terraformCode: `resource "aws_organizations_organizational_unit" "main" {
   name      = "ou-main"
   parent_id = aws_organizations_organization.main.roots[0].id
@@ -1599,7 +1599,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_ssm_parameter',
         entity: 'parameters',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Management/aws-aws-systems-manager.svg',
         terraformCode: `resource "aws_ssm_parameter" "main" {
   name  = "/app/ssm-main"
   type  = "SecureString"
@@ -1623,7 +1623,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_codebuild_project',
         entity: 'projects',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Dev Tools/aws-aws-codebuild.svg',
         terraformCode: `resource "aws_codebuild_project" "main" {
   name         = "cb-main"
   service_role = aws_iam_role.codebuild.arn
@@ -1659,7 +1659,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_codepipeline',
         entity: 'pipelines',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Dev Tools/aws-aws-codepipeline.svg',
         terraformCode: `resource "aws_codepipeline" "main" {
   name     = "cp-main"
   role_arn = aws_iam_role.codepipeline.arn
@@ -1706,7 +1706,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_wafv2_web_acl',
         entity: 'webACLs',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Networking/aws-aws-waf.svg',
         terraformCode: `resource "aws_wafv2_web_acl" "main" {
   name  = "waf-main"
   scope = "REGIONAL"
@@ -1740,7 +1740,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_acm_certificate',
         entity: 'certificates',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Networking/aws-aws-certificate-manager.svg',
         terraformCode: `resource "aws_acm_certificate" "main" {
   domain_name       = "app.example.com"
   validation_method = "DNS"
@@ -1767,7 +1767,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_cognito_user_pool',
         entity: 'userPools',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Management/aws-amazon-cognito.svg',
         terraformCode: `resource "aws_cognito_user_pool" "main" {
   name = "cup-main"
 
@@ -1798,7 +1798,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_lightsail_instance',
         entity: 'instances',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Compute and Web/aws-amazon-lightsail.svg',
         terraformCode: `resource "aws_lightsail_instance" "main" {
   name              = "ls-main"
   availability_zone = "us-east-1a"
@@ -1823,7 +1823,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_imagebuilder_image_recipe',
         entity: 'imageRecipes',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Compute and Web/aws-amazon-ec2-image-builder.svg',
         terraformCode: `resource "aws_imagebuilder_image_recipe" "main" {
   name         = "recipe-main"
   parent_image = "arn:aws:imagebuilder:us-east-1:aws:image/amazon-linux-2023-x86/x.x.x"
@@ -1851,7 +1851,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_serverlessapplicationrepository_cloudformation_stack',
         entity: 'stacks',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Compute and Web/aws-aws-serverless-application-repository.svg',
         terraformCode: `resource "aws_serverlessapplicationrepository_cloudformation_stack" "main" {
   name           = "sar-main"
   application_id = "arn:aws:serverlessrepo:us-east-1:297356227824:applications/SecretsManagerRDSPostgreSQLRotationSingleUser"
@@ -1880,7 +1880,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_storagegateway_gateway',
         entity: 'gateways',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Storage/aws-aws-storage-gateway.svg',
         terraformCode: `resource "aws_storagegateway_gateway" "main" {
   gateway_ip_address = "10.0.0.10"
   gateway_name       = "sgw-main"
@@ -1906,7 +1906,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_neptune_cluster',
         entity: 'dbClusters',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Databases/aws-amazon-neptune.svg',
         terraformCode: `resource "aws_neptune_cluster" "main" {
   cluster_identifier                  = "neptune-main"
   engine                              = "neptune"
@@ -1933,7 +1933,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_memorydb_cluster',
         entity: 'clusters',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Databases/aws-amazon-memorydb.svg',
         terraformCode: `resource "aws_memorydb_cluster" "main" {
   name                   = "memorydb-main"
   acl_name               = "open-access"
@@ -1965,7 +1965,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_dx_connection',
         entity: 'connections',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Networking/aws-aws-direct-connect.svg',
         terraformCode: `resource "aws_dx_connection" "main" {
   name      = "dx-main"
   bandwidth = "1Gbps"
@@ -1990,7 +1990,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_globalaccelerator_accelerator',
         entity: 'accelerators',
         scope: 'global',
-        icon: '',
+        icon: '/aws/icons/Networking/aws-aws-global-accelerator.svg',
         terraformCode: `resource "aws_globalaccelerator_accelerator" "main" {
   name            = "ga-main"
   ip_address_type = "IPV4"
@@ -2014,7 +2014,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_service_discovery_http_namespace',
         entity: 'namespaces',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/Networking/aws-aws-cloud-map.svg',
         terraformCode: `resource "aws_service_discovery_http_namespace" "main" {
   name        = "ns-main"
   description = "Service discovery namespace"
@@ -2037,7 +2037,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_rekognition_collection',
         entity: 'collections',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/AI and ML/aws-amazon-rekognition.svg',
         terraformCode: `resource "aws_rekognition_collection" "main" {
   collection_id = "rek-main"
 }`,
@@ -2060,7 +2060,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_comprehend_document_classifier',
         entity: 'documentClassifiers',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/AI and ML/aws-amazon-comprehend.svg',
         terraformCode: `resource "aws_comprehend_document_classifier" "main" {
   name                 = "cmp-main"
   data_access_role_arn = aws_iam_role.comprehend.arn
@@ -2089,7 +2089,7 @@ resource "aws_kms_alias" "main" {
         resource: 'aws_lexv2models_bot',
         entity: 'bots',
         scope: 'region',
-        icon: '',
+        icon: '/aws/icons/AI and ML/aws-amazon-lex.svg',
         terraformCode: `resource "aws_lexv2models_bot" "main" {
   name                        = "bot-main"
   role_arn                    = aws_iam_role.lex.arn

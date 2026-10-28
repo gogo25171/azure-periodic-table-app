@@ -19,6 +19,7 @@ yarn check:deps       # yarn outdated + yarn audit summary
 yarn add:resource     # guided (or --file resource.json) insertion of a resource
 yarn add:provider     # scaffolds a provider across the 10 files that must know about it
 yarn update:credits   # regenerates docs/about/credits.md from git shortlog (CI checks it)
+yarn icons:sync       # copies the AWS/GCP icons mapped in scripts/icon-map.json from the vendor/thesvg submodule
 yarn hooks:install    # git config core.hooksPath .githooks (pre-commit runs yarn verify)
 ```
 

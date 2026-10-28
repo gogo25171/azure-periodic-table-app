@@ -1,0 +1,4 @@
+[submodule "vendor/thesvg"]
+	path = vendor/thesvg
+	url = https://github.com/glincker/thesvg
+	shallow = true
